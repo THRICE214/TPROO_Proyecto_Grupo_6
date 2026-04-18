@@ -17,6 +17,9 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class V1 extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -29,6 +32,10 @@ public class V1 extends JFrame implements ActionListener {
 	private JButton btnAgregar;
 	private JScrollPane scrollPane;
 	private JTable tablaMedicamentos;
+	private JButton btnNewButton;
+	private JButton btnNewButton_1;
+	private JButton btnNewButton_2;
+	private JButton btnNewButton_3;
 
 	/**
 	 * Launch the application.
@@ -52,7 +59,7 @@ public class V1 extends JFrame implements ActionListener {
 	public V1() {
 		setTitle("Medicamento (pre-Concepto)");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 599, 338);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -61,7 +68,7 @@ public class V1 extends JFrame implements ActionListener {
 		JLabel lblNewLabel = new JLabel("REGISTRO DE MEDICAMENTOS A LA VENTA ");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblNewLabel.setBackground(new Color(240, 240, 240));
-		lblNewLabel.setBounds(27, 10, 445, 21);
+		lblNewLabel.setBounds(10, 11, 445, 21);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("USUARIO:");
@@ -86,7 +93,7 @@ public class V1 extends JFrame implements ActionListener {
 		
 		btnAgregar = new JButton("Agregar");
 		btnAgregar.addActionListener(this);
-		btnAgregar.setBounds(289, 41, 84, 20);
+		btnAgregar.setBounds(27, 189, 89, 23);
 		contentPane.add(btnAgregar);
 		
 		txtUsuario = new JTextField();
@@ -115,7 +122,7 @@ public class V1 extends JFrame implements ActionListener {
 		contentPane.add(txtProducto);
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(260, 65, 164, 181);
+			scrollPane.setBounds(266, 55, 313, 206);
 			contentPane.add(scrollPane);
 			{
 				tablaMedicamentos = new JTable();
@@ -125,9 +132,35 @@ public class V1 extends JFrame implements ActionListener {
 		String[] columnas = {"PRODUCTO", "CÓDIGO", "TIPO", "PRECIO", "USUARIO"};
 		DefaultTableModel modelo = new DefaultTableModel(null, columnas);
 		tablaMedicamentos.setModel(modelo);
+		{
+			btnNewButton = new JButton("Modificar");
+			btnNewButton.setBounds(126, 189, 89, 23);
+			contentPane.add(btnNewButton);
+		}
+		{
+			btnNewButton_1 = new JButton("Reportar");
+			btnNewButton_1.addActionListener(this);
+			btnNewButton_1.setBounds(27, 223, 89, 23);
+			contentPane.add(btnNewButton_1);
+		}
+		{
+			btnNewButton_2 = new JButton("Buscar");
+			btnNewButton_2.setBounds(27, 257, 89, 23);
+			contentPane.add(btnNewButton_2);
+		}
+		{
+			btnNewButton_3 = new JButton("Eliminar");
+			btnNewButton_3.setBounds(126, 223, 89, 23);
+			contentPane.add(btnNewButton_3);
+		}
 	}
 	
+	private List<Medicamento> listaMedicamentos = new ArrayList<>();
+	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnNewButton_1) {
+			do_btnNewButton_1_actionPerformed(e);
+		}
 		if (e.getSource() == btnAgregar) {
 			gestionarRegistro();
 			
@@ -150,7 +183,10 @@ public class V1 extends JFrame implements ActionListener {
             Medicamento med = new Medicamento(producto, codigo, tipo, precio, usuario);
             
             DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
+            modelo.setRowCount(0);
             modelo.addRow(med.toFila());
+            
+            listaMedicamentos.add(med);
 
             limpiarCampos();
             
@@ -167,4 +203,19 @@ public class V1 extends JFrame implements ActionListener {
         txtPrecio.setText("");
         txtUsuario.requestFocus(); 
     }
+	protected void do_btnNewButton_1_actionPerformed(ActionEvent e) {
+		try {
+			DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
+			modelo.setRowCount(0);
+			
+			for (Medicamento m : listaMedicamentos) {
+		        modelo.addRow(m.toFila());
+		    }
+			
+			limpiarCampos();
+            
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+        }
+	}
 }
