@@ -1,0 +1,221 @@
+package gui;
+
+import javax.swing.table.DefaultTableModel;
+import clase.Medicamento;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JScrollPane;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class V1 extends JFrame implements ActionListener {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField txtUsuario;
+	private JTextField txtTipo;
+	private JTextField txtCodigo;
+	private JTextField txtPrecio;
+	private JTextField txtProducto;
+	private JButton btnAgregar;
+	private JScrollPane scrollPane;
+	private JTable tablaMedicamentos;
+	private JButton btnNewButton;
+	private JButton btnNewButton_1;
+	private JButton btnNewButton_2;
+	private JButton btnNewButton_3;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					V1 frame = new V1();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public V1() {
+		setTitle("Medicamento (pre-Concepto)");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 599, 338);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("REGISTRO DE MEDICAMENTOS A LA VENTA ");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblNewLabel.setBackground(new Color(240, 240, 240));
+		lblNewLabel.setBounds(10, 11, 445, 21);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("USUARIO:");
+		lblNewLabel_1.setBounds(36, 63, 68, 12);
+		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("PRODUCTO:");
+		lblNewLabel_2.setBounds(33, 96, 71, 12);
+		contentPane.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("TIPO:");
+		lblNewLabel_2_1.setBounds(33, 118, 71, 12);
+		contentPane.add(lblNewLabel_2_1);
+		
+		JLabel lblNewLabel_2_1_1 = new JLabel("CÓDIGO:");
+		lblNewLabel_2_1_1.setBounds(33, 142, 71, 12);
+		contentPane.add(lblNewLabel_2_1_1);
+		
+		JLabel lblNewLabel_2_1_2 = new JLabel("PRECIO:");
+		lblNewLabel_2_1_2.setBounds(33, 166, 71, 12);
+		contentPane.add(lblNewLabel_2_1_2);
+		
+		btnAgregar = new JButton("Agregar");
+		btnAgregar.addActionListener(this);
+		btnAgregar.setBounds(27, 189, 89, 23);
+		contentPane.add(btnAgregar);
+		
+		txtUsuario = new JTextField();
+		txtUsuario.setColumns(10);
+		txtUsuario.setBounds(119, 60, 137, 18);
+		contentPane.add(txtUsuario);
+		
+		txtTipo = new JTextField();
+		txtTipo.setColumns(10);
+		txtTipo.setBounds(119, 115, 137, 18);
+		contentPane.add(txtTipo);
+		
+		txtCodigo = new JTextField();
+		txtCodigo.setColumns(10);
+		txtCodigo.setBounds(119, 139, 137, 18);
+		contentPane.add(txtCodigo);
+		
+		txtPrecio = new JTextField();
+		txtPrecio.setColumns(10);
+		txtPrecio.setBounds(119, 160, 137, 18);
+		contentPane.add(txtPrecio);
+		
+		txtProducto = new JTextField();
+		txtProducto.setColumns(10);
+		txtProducto.setBounds(119, 93, 137, 18);
+		contentPane.add(txtProducto);
+		{
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(266, 55, 313, 206);
+			contentPane.add(scrollPane);
+			{
+				tablaMedicamentos = new JTable();
+				scrollPane.setViewportView(tablaMedicamentos);
+			}
+		}
+		String[] columnas = {"PRODUCTO", "CÓDIGO", "TIPO", "PRECIO", "USUARIO"};
+		DefaultTableModel modelo = new DefaultTableModel(null, columnas);
+		tablaMedicamentos.setModel(modelo);
+		{
+			btnNewButton = new JButton("Modificar");
+			btnNewButton.setBounds(126, 189, 89, 23);
+			contentPane.add(btnNewButton);
+		}
+		{
+			btnNewButton_1 = new JButton("Reportar");
+			btnNewButton_1.addActionListener(this);
+			btnNewButton_1.setBounds(27, 223, 89, 23);
+			contentPane.add(btnNewButton_1);
+		}
+		{
+			btnNewButton_2 = new JButton("Buscar");
+			btnNewButton_2.setBounds(27, 257, 89, 23);
+			contentPane.add(btnNewButton_2);
+		}
+		{
+			btnNewButton_3 = new JButton("Eliminar");
+			btnNewButton_3.setBounds(126, 223, 89, 23);
+			contentPane.add(btnNewButton_3);
+		}
+	}
+	
+	private List<Medicamento> listaMedicamentos = new ArrayList<>();
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnNewButton_1) {
+			do_btnNewButton_1_actionPerformed(e);
+		}
+		if (e.getSource() == btnAgregar) {
+			gestionarRegistro();
+			
+		}
+	}
+	private void gestionarRegistro() {                                           
+        try {
+
+            String usuario = txtUsuario.getText();
+            String producto = txtProducto.getText();
+            String tipo = txtTipo.getText();
+            String codigo = txtCodigo.getText();
+            String precio = txtPrecio.getText();
+
+            if (usuario.isEmpty() || producto.isEmpty() || codigo.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos, Gracias.");
+                return;
+            }
+
+            Medicamento med = new Medicamento(producto, codigo, tipo, precio, usuario);
+            
+            DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
+            modelo.setRowCount(0);
+            modelo.addRow(med.toFila());
+            
+            listaMedicamentos.add(med);
+
+            limpiarCampos();
+            
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+        }
+    } 
+
+    private void limpiarCampos() {
+        txtUsuario.setText("");
+        txtProducto.setText("");
+        txtTipo.setText("");
+        txtCodigo.setText("");
+        txtPrecio.setText("");
+        txtUsuario.requestFocus(); 
+    }
+	protected void do_btnNewButton_1_actionPerformed(ActionEvent e) {
+		try {
+			DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
+			modelo.setRowCount(0);
+			
+			for (Medicamento m : listaMedicamentos) {
+		        modelo.addRow(m.toFila());
+		    }
+			
+			limpiarCampos();
+            
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+        }
+	}
+}

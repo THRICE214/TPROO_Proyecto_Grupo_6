@@ -59,7 +59,7 @@ public class V1 extends JFrame implements ActionListener {
 	public V1() {
 		setTitle("Medicamento (pre-Concepto)");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 599, 338);
+		setBounds(100, 100, 599, 374);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -145,6 +145,7 @@ public class V1 extends JFrame implements ActionListener {
 		}
 		{
 			btnNewButton_2 = new JButton("Buscar");
+			btnNewButton_2.addActionListener(this);
 			btnNewButton_2.setBounds(27, 257, 89, 23);
 			contentPane.add(btnNewButton_2);
 		}
@@ -153,11 +154,21 @@ public class V1 extends JFrame implements ActionListener {
 			btnNewButton_3.setBounds(126, 223, 89, 23);
 			contentPane.add(btnNewButton_3);
 		}
+		{
+			txtBusqueda = new JTextField();
+			txtBusqueda.setBounds(30, 288, 187, 20);
+			contentPane.add(txtBusqueda);
+			txtBusqueda.setColumns(10);
+		}
 	}
 	
 	private List<Medicamento> listaMedicamentos = new ArrayList<>();
+	private JTextField txtBusqueda;
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnNewButton_2) {
+			do_btnNewButton_2_actionPerformed(e);
+		}
 		if (e.getSource() == btnNewButton_1) {
 			do_btnNewButton_1_actionPerformed(e);
 		}
@@ -217,5 +228,31 @@ public class V1 extends JFrame implements ActionListener {
         } catch (Exception ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
+	}
+	protected void do_btnNewButton_2_actionPerformed(ActionEvent e) {
+
+		String textoBuscado = txtBusqueda.getText().trim();
+
+		
+		if (textoBuscado.isEmpty()) {
+			javax.swing.JOptionPane.showMessageDialog(this, "Por favor, ingresa un código para buscar.");
+		    return; 
+		}
+
+		DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
+		modelo.setRowCount(0); 
+
+		boolean encontrado = false;
+		for (Medicamento m : listaMedicamentos) {
+		    if (m.getCod().equalsIgnoreCase(textoBuscado)) {
+		        modelo.addRow(m.toFila()); 
+		        encontrado = true;
+		        break; 
+		    }
+		}
+
+		if (!encontrado) {
+		    javax.swing.JOptionPane.showMessageDialog(this, "No se encontró el medicamento con código: " + textoBuscado);
+		}
 	}
 }
