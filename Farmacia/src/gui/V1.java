@@ -19,6 +19,8 @@ import javax.swing.JScrollPane;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ImageIcon;
+import java.awt.Toolkit;
 
 public class V1 extends JFrame implements ActionListener {
 
@@ -57,66 +59,83 @@ public class V1 extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public V1() {
-		setTitle("Medicamento (pre-Concepto)");
+		setForeground(new Color(204, 255, 204));
+		setBackground(new Color(153, 255, 153));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Lenovo\\Pictures\\Screenshots\\Captura de pantalla 2026-04-18 185356.png"));
+		setTitle("Medicamentos ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 599, 374);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(153, 204, 153));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("REGISTRO DE MEDICAMENTOS A LA VENTA ");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblNewLabel.setBackground(new Color(240, 240, 240));
-		lblNewLabel.setBounds(10, 11, 445, 21);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblNewLabel.setBackground(new Color(240, 255, 240));
+		lblNewLabel.setBounds(86, 11, 493, 21);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("USUARIO:");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 10));
 		lblNewLabel_1.setBounds(36, 63, 68, 12);
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("PRODUCTO:");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 10));
 		lblNewLabel_2.setBounds(33, 96, 71, 12);
 		contentPane.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("TIPO:");
+		lblNewLabel_2_1.setFont(new Font("Tahoma", Font.BOLD, 10));
 		lblNewLabel_2_1.setBounds(33, 118, 71, 12);
 		contentPane.add(lblNewLabel_2_1);
 		
 		JLabel lblNewLabel_2_1_1 = new JLabel("CÓDIGO:");
+		lblNewLabel_2_1_1.setFont(new Font("Tahoma", Font.BOLD, 10));
 		lblNewLabel_2_1_1.setBounds(33, 142, 71, 12);
 		contentPane.add(lblNewLabel_2_1_1);
 		
 		JLabel lblNewLabel_2_1_2 = new JLabel("PRECIO:");
+		lblNewLabel_2_1_2.setFont(new Font("Tahoma", Font.BOLD, 10));
 		lblNewLabel_2_1_2.setBounds(33, 166, 71, 12);
 		contentPane.add(lblNewLabel_2_1_2);
 		
 		btnAgregar = new JButton("Agregar");
+		btnAgregar.setFont(new Font("Tahoma", Font.BOLD, 10));
+		btnAgregar.setBackground(new Color(46, 139, 87));
+		btnAgregar.setForeground(new Color(0, 0, 0));
 		btnAgregar.addActionListener(this);
 		btnAgregar.setBounds(27, 189, 89, 23);
 		contentPane.add(btnAgregar);
 		
 		txtUsuario = new JTextField();
+		txtUsuario.setBackground(new Color(240, 255, 240));
 		txtUsuario.setColumns(10);
 		txtUsuario.setBounds(119, 60, 137, 18);
 		contentPane.add(txtUsuario);
 		
 		txtTipo = new JTextField();
+		txtTipo.setBackground(new Color(240, 255, 240));
 		txtTipo.setColumns(10);
 		txtTipo.setBounds(119, 115, 137, 18);
 		contentPane.add(txtTipo);
 		
 		txtCodigo = new JTextField();
+		txtCodigo.setBackground(new Color(240, 255, 240));
 		txtCodigo.setColumns(10);
 		txtCodigo.setBounds(119, 139, 137, 18);
 		contentPane.add(txtCodigo);
 		
 		txtPrecio = new JTextField();
+		txtPrecio.setBackground(new Color(240, 255, 240));
 		txtPrecio.setColumns(10);
 		txtPrecio.setBounds(119, 160, 137, 18);
 		contentPane.add(txtPrecio);
 		
 		txtProducto = new JTextField();
+		txtProducto.setBackground(new Color(240, 255, 240));
 		txtProducto.setColumns(10);
 		txtProducto.setBounds(119, 93, 137, 18);
 		contentPane.add(txtProducto);
@@ -134,29 +153,40 @@ public class V1 extends JFrame implements ActionListener {
 		tablaMedicamentos.setModel(modelo);
 		{
 			btnNewButton = new JButton("Modificar");
+			btnNewButton.setBackground(new Color(0, 100, 0));
+			btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 10));
+			btnNewButton.setForeground(new Color(0, 0, 0));
 			btnNewButton.setBounds(126, 189, 89, 23);
 			contentPane.add(btnNewButton);
 		}
 		{
 			btnNewButton_1 = new JButton("Reportar");
+			btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 10));
+			btnNewButton_1.setForeground(new Color(0, 0, 0));
+			btnNewButton_1.setBackground(new Color(46, 139, 87));
 			btnNewButton_1.addActionListener(this);
 			btnNewButton_1.setBounds(27, 223, 89, 23);
 			contentPane.add(btnNewButton_1);
 		}
 		{
 			btnNewButton_2 = new JButton("Buscar");
+			btnNewButton_2.setBackground(new Color(34, 139, 34));
+			btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD, 10));
 			btnNewButton_2.addActionListener(this);
-			btnNewButton_2.setBounds(27, 257, 89, 23);
+			btnNewButton_2.setBounds(268, 279, 89, 23);
 			contentPane.add(btnNewButton_2);
 		}
 		{
 			btnNewButton_3 = new JButton("Eliminar");
+			btnNewButton_3.setFont(new Font("Tahoma", Font.BOLD, 10));
+			btnNewButton_3.setBackground(new Color(34, 139, 34));
 			btnNewButton_3.setBounds(126, 223, 89, 23);
 			contentPane.add(btnNewButton_3);
 		}
 		{
 			txtBusqueda = new JTextField();
-			txtBusqueda.setBounds(30, 288, 187, 20);
+			txtBusqueda.setBackground(new Color(240, 255, 240));
+			txtBusqueda.setBounds(367, 281, 208, 20);
 			contentPane.add(txtBusqueda);
 			txtBusqueda.setColumns(10);
 		}
@@ -178,34 +208,55 @@ public class V1 extends JFrame implements ActionListener {
 		}
 	}
 	private void gestionarRegistro() {                                           
-        try {
+		try {
+		    String usuario = txtUsuario.getText().trim();
+		    String producto = txtProducto.getText().trim();
+		    String tipo = txtTipo.getText().trim();
+		    String codigo = txtCodigo.getText().trim();
+		    String precioTexto = txtPrecio.getText().trim();
 
-            String usuario = txtUsuario.getText();
-            String producto = txtProducto.getText();
-            String tipo = txtTipo.getText();
-            String codigo = txtCodigo.getText();
-            String precio = txtPrecio.getText();
+		        if (usuario.isEmpty() || producto.isEmpty() || tipo.isEmpty() || codigo.isEmpty() || precioTexto.isEmpty()) {
+		        javax.swing.JOptionPane.showMessageDialog(this, "Complete todos los campos");
+		        return;
+		    }
 
-            if (usuario.isEmpty() || producto.isEmpty() || codigo.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos, Gracias.");
-                return;
-            }
+	
+		    if (!usuario.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+		        javax.swing.JOptionPane.showMessageDialog(this, "El usuario solo debe contener letras");
+		        txtUsuario.requestFocus();
+		        return;
+		    }
 
-            Medicamento med = new Medicamento(producto, codigo, tipo, precio, usuario);
-            
-            DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
-            modelo.setRowCount(0);
-            modelo.addRow(med.toFila());
-            
-            listaMedicamentos.add(med);
+		    
+		    double precio;
+		    try {
+		        precio = Double.parseDouble(precioTexto);
+		    } catch (NumberFormatException e) {
+		        javax.swing.JOptionPane.showMessageDialog(this, "Ingrese un precio válido");
+		        txtPrecio.requestFocus();
+		        return;
+		    }
 
-            limpiarCampos();
-            
-        } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
-        }
-    } 
+		    if (precio <= 0) {
+		        javax.swing.JOptionPane.showMessageDialog(this, "El precio debe ser mayor a 0");
+		        txtPrecio.requestFocus();
+		        return;
+		    }
 
+		   
+		    Medicamento med = new Medicamento (producto, codigo , tipo,  precio, usuario);
+		
+		   
+		    DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
+		    modelo.addRow(med.toFila());
+
+		    
+		    limpiarCampos();
+
+		} catch (Exception ex) {
+		    javax.swing.JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+		}
+		}
     private void limpiarCampos() {
         txtUsuario.setText("");
         txtProducto.setText("");
