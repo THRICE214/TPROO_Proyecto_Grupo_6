@@ -4,18 +4,18 @@ public class Medicamento {
 	private String pro;
 	private String cod;
 	private String tipo;
-	private String precio;
+	private double precio;
 	private String user;
 
 	
 
-	public Medicamento (String pro, String cod, String tipo, String precio, String user) {
-		this.pro = pro;
-		this.cod = cod;
-		this.tipo = tipo;
-		this.precio = precio;
-		this.user = user;
-	}
+	   public Medicamento(String producto, String codigo, String tipo, double precio, String usuario) {
+	        this.pro = producto;
+	        this.cod= codigo;
+	        this.tipo = tipo;
+	        this.precio = precio;
+	        this.user = usuario;
+	    }
 	
 	public String getCod() {
 		return cod;
@@ -23,7 +23,7 @@ public class Medicamento {
 	public String getTipo() {
 		return tipo;
 	}
-	public String getPrecio() {
+	public  double getPrecio() {
 		return precio;
 	}
 	
