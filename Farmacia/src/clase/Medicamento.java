@@ -35,4 +35,16 @@ public class Medicamento {
 		return new Object[] { pro, cod, tipo, precio, user};
 	}
 	
+		public void setPro(String pro) {
+			this.pro = pro;
+		}
+		
+		public void setTipo(String tipo) {
+			this.tipo = tipo;
+		}
+		
+		public void setPrecio(double precio) {
+			this.precio = precio;
+		}
+	
 }

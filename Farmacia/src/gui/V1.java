@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -39,9 +40,7 @@ public class V1 extends JFrame implements ActionListener {
 	private JButton btnNewButton_2;
 	private JButton btnEliminar;
 
-	/**
-	 * Launch the application.
-	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -55,9 +54,7 @@ public class V1 extends JFrame implements ActionListener {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	
 	public V1() {
 		setForeground(new Color(204, 255, 204));
 		setBackground(new Color(153, 255, 153));
@@ -153,6 +150,7 @@ public class V1 extends JFrame implements ActionListener {
 		tablaMedicamentos.setModel(modelo);
 		{
 			btnNewButton = new JButton("Modificar");
+			btnNewButton.addActionListener(this);
 			btnNewButton.setBackground(new Color(0, 100, 0));
 			btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 10));
 			btnNewButton.setForeground(new Color(0, 0, 0));
@@ -197,6 +195,9 @@ public class V1 extends JFrame implements ActionListener {
 	private JTextField txtBusqueda;
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnNewButton) {
+			do_btnNewButton_actionPerformed(e);
+		}
 		if (e.getSource() == btnEliminar) {
 			do_btnEliminar_actionPerformed(e);
 		}
@@ -341,5 +342,65 @@ public class V1 extends JFrame implements ActionListener {
 		        javax.swing.JOptionPane.showMessageDialog(this, "Se eliminó de la tabla, pero el medicamento no estaba en la lista");
 		    }
 		
+	}
+	protected void do_btnNewButton_actionPerformed(ActionEvent e) {
+		
+		
+	
+		int filaSeleccionada = tablaMedicamentos.getSelectedRow();
+
+		if (filaSeleccionada == -1) {
+		    JOptionPane.showMessageDialog(null, "Selecciona un medicamento de la tabla para modificar");
+		    return;
+		}
+
+
+		DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
+
+		String codigoSeleccionado = modelo.getValueAt(filaSeleccionada, 0).toString().trim();
+
+		
+		String nuevoProducto = txtProducto.getText();
+		String nuevoTipo = txtTipo.getText();
+		String nuevoPrecioTexto = txtPrecio.getText();
+
+	
+		if (nuevoProducto.isEmpty() || nuevoPrecioTexto.isEmpty()) {
+		    JOptionPane.showMessageDialog(null, "Los campos no pueden estar vacíos");
+		    return;
+		}
+
+		
+		boolean modificado = false;
+		for (Medicamento m : listaMedicamentos) {
+		    if (m.getCod().equalsIgnoreCase(codigoSeleccionado)) {
+		        
+		        m.setPro(nuevoProducto); 
+		        m.setTipo(nuevoTipo);
+		        
+		        
+		        try {
+		            double precioNumerico = Double.parseDouble(nuevoPrecioTexto);
+		            m.setPrecio(precioNumerico);
+		        } catch (NumberFormatException ex) {
+		            JOptionPane.showMessageDialog(null, "El precio debe ser un número válido");
+		            return;
+		        }
+		        
+		        modificado = true;
+		        break; 
+		    }
+		}
+
+	
+		if (modificado) {
+		   
+		    modelo.setValueAt(nuevoProducto, filaSeleccionada, 1); 
+		    modelo.setValueAt(nuevoTipo, filaSeleccionada, 2);     
+		    modelo.setValueAt(nuevoPrecioTexto, filaSeleccionada, 3); 
+		    
+		    JOptionPane.showMessageDialog(null, "Medicamento modificado correctamente");
+		    limpiarCampos(); 
+		}
 	}
 }
