@@ -250,6 +250,7 @@ public class V1 extends JFrame implements ActionListener {
 		    DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
 		    modelo.addRow(med.toFila());
 
+		    listaMedicamentos.add(med);
 		    
 		    limpiarCampos();
 
