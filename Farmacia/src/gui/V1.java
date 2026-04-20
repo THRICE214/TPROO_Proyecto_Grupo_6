@@ -37,7 +37,7 @@ public class V1 extends JFrame implements ActionListener {
 	private JButton btnNewButton;
 	private JButton btnNewButton_1;
 	private JButton btnNewButton_2;
-	private JButton btnNewButton_3;
+	private JButton btnEliminar;
 
 	/**
 	 * Launch the application.
@@ -177,11 +177,12 @@ public class V1 extends JFrame implements ActionListener {
 			contentPane.add(btnNewButton_2);
 		}
 		{
-			btnNewButton_3 = new JButton("Eliminar");
-			btnNewButton_3.setFont(new Font("Tahoma", Font.BOLD, 10));
-			btnNewButton_3.setBackground(new Color(34, 139, 34));
-			btnNewButton_3.setBounds(126, 223, 89, 23);
-			contentPane.add(btnNewButton_3);
+			btnEliminar = new JButton("Eliminar");
+			btnEliminar.addActionListener(this);
+			btnEliminar.setFont(new Font("Tahoma", Font.BOLD, 10));
+			btnEliminar.setBackground(new Color(34, 139, 34));
+			btnEliminar.setBounds(126, 223, 89, 23);
+			contentPane.add(btnEliminar);
 		}
 		{
 			txtBusqueda = new JTextField();
@@ -196,6 +197,9 @@ public class V1 extends JFrame implements ActionListener {
 	private JTextField txtBusqueda;
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminar) {
+			do_btnEliminar_actionPerformed(e);
+		}
 		if (e.getSource() == btnNewButton_2) {
 			do_btnNewButton_2_actionPerformed(e);
 		}
@@ -305,5 +309,36 @@ public class V1 extends JFrame implements ActionListener {
 		if (!encontrado) {
 		    javax.swing.JOptionPane.showMessageDialog(this, "No se encontró el medicamento con código: " + textoBuscado);
 		}
+	}
+	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
+		
+		    int filaSeleccionada = tablaMedicamentos.getSelectedRow();
+
+		    if (filaSeleccionada == -1) {
+		        javax.swing.JOptionPane.showMessageDialog(this, "Selecciona un registro para eliminar");
+		        return;
+		    }
+
+		    DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
+
+		    String codigo = modelo.getValueAt(filaSeleccionada, 1).toString();
+
+		    boolean eliminado = false;
+		    for (int i = 0; i < listaMedicamentos.size(); i++) {
+		        if (listaMedicamentos.get(i).getCod().equalsIgnoreCase(codigo)) {
+		            listaMedicamentos.remove(i);
+		            eliminado = true;
+		            break;
+		        }
+		    }
+
+		    modelo.removeRow(filaSeleccionada);
+
+		    if (eliminado) {
+		        javax.swing.JOptionPane.showMessageDialog(this, "Medicamento eliminado correctamente");
+		    } else {
+		        javax.swing.JOptionPane.showMessageDialog(this, "Se eliminó de la tabla, pero el medicamento no estaba en la lista");
+		    }
+		
 	}
 }
