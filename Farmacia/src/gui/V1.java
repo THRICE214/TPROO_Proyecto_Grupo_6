@@ -201,11 +201,17 @@ public class V1 extends JFrame implements ActionListener {
 	}
 	
 	public void mostrar(Medicamento med, DefaultTableModel modelo) {
-		 
+	
 	}
 	
+	//Sobrecarga de metodos agregado (mostrar)
 	public void mostrar(List<Medicamento> medList) {
+		DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
+		modelo.setRowCount(0);
 		
+		for (Medicamento m : medList) {
+	        modelo.addRow(m.toFila());
+	    }
 	}
 	
 	public void actionPerformed(ActionEvent e) {
