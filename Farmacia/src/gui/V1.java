@@ -199,12 +199,9 @@ public class V1 extends JFrame implements ActionListener {
 		DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
 	    modelo.addRow(med.toFila());
 	}
-	  // Sobrecarga de métodos agregados parte 2 
+	  // Sobrecarga de métodos agregados (parte 2)
 	public void mostrar(Medicamento med, DefaultTableModel modelo) {
-	
-
 		modelo.addRow(med.toFila());
-	
 	}
 	
 	//Sobrecarga de métodos agregado parte 3 (mostrar)
