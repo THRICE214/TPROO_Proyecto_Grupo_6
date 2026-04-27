@@ -191,8 +191,22 @@ public class V1 extends JFrame implements ActionListener {
 		}
 	}
 	
-	private List<Medicamento> listaMedicamentos = new ArrayList<>();
+	private List<Medicamento> listaMedicamentos = new ArrayList<Medicamento>();
 	private JTextField txtBusqueda;
+	
+	//sobrecarga de metodos (mostrar)
+	public void mostrar(Medicamento med) {
+		DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
+	    modelo.addRow(med.toFila());
+	}
+	
+	public void mostrar(Medicamento med, DefaultTableModel modelo) {
+		 
+	}
+	
+	public void mostrar(List<Medicamento> medList) {
+		
+	}
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnNewButton) {
@@ -251,9 +265,7 @@ public class V1 extends JFrame implements ActionListener {
 		   
 		    Medicamento med = new Medicamento (producto, codigo , tipo,  precio, usuario);
 		
-		   
-		    DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
-		    modelo.addRow(med.toFila());
+		    mostrar(med);
 
 		    listaMedicamentos.add(med);
 		    
@@ -273,12 +285,7 @@ public class V1 extends JFrame implements ActionListener {
     }
 	protected void do_btnNewButton_1_actionPerformed(ActionEvent e) {
 		try {
-			DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
-			modelo.setRowCount(0);
-			
-			for (Medicamento m : listaMedicamentos) {
-		        modelo.addRow(m.toFila());
-		    }
+			mostrar(listaMedicamentos);
 			
 			limpiarCampos();
             
@@ -289,7 +296,6 @@ public class V1 extends JFrame implements ActionListener {
 	protected void do_btnNewButton_2_actionPerformed(ActionEvent e) {
 
 		String textoBuscado = txtBusqueda.getText().trim();
-
 		
 		if (textoBuscado.isEmpty()) {
 			javax.swing.JOptionPane.showMessageDialog(this, "Por favor, ingresa un código para buscar.");
@@ -302,7 +308,7 @@ public class V1 extends JFrame implements ActionListener {
 		boolean encontrado = false;
 		for (Medicamento m : listaMedicamentos) {
 		    if (m.getCod().equalsIgnoreCase(textoBuscado)) {
-		        modelo.addRow(m.toFila()); 
+		        mostrar(m, modelo);
 		        encontrado = true;
 		        break; 
 		    }
