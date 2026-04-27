@@ -194,7 +194,7 @@ public class V1 extends JFrame implements ActionListener {
 	private List<Medicamento> listaMedicamentos = new ArrayList<Medicamento>();
 	private JTextField txtBusqueda;
 	
-	//sobrecarga de métodos (mostrar)
+	//sobrecarga de métodos agregados (parte 1)
 	public void mostrar(Medicamento med) {
 		DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
 	    modelo.addRow(med.toFila());
@@ -204,7 +204,7 @@ public class V1 extends JFrame implements ActionListener {
 		modelo.addRow(med.toFila());
 	}
 	
-	//Sobrecarga de métodos agregado parte 3 (mostrar)
+	//Sobrecarga de métodos agregado (parte 3)
 	public void mostrar(List<Medicamento> medList) {
 		DefaultTableModel modelo = (DefaultTableModel) tablaMedicamentos.getModel();
 		modelo.setRowCount(0);
