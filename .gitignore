@@ -1,7 +1,8 @@
 bin/
 .settings/
 .recommenders/
-.metadata/
+/.metadata/
+/.project
 .env
 *.log
 .DS_Store
