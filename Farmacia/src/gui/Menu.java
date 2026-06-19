@@ -18,7 +18,7 @@ public class Menu extends JFrame {
 	private JPanel contentPane;
 	private JLabel lblNewLabel;
 	private JLabel lblNomUsu;
-	private JButton btnPerfil;
+	private JButton btnAdministrador;
 	private JButton btnCompra;
 	private JButton btnVenta;
 	private JButton btnProd;
@@ -68,9 +68,10 @@ public class Menu extends JFrame {
 			contentPane.add(lblNomUsu);
 		}
 		{
-			btnPerfil = new JButton("Perfil");
-			btnPerfil.setBounds(335, 16, 89, 23);
-			contentPane.add(btnPerfil);
+			btnAdministrador = new JButton("Administrar Usuarios");
+			btnAdministrador.setFont(new Font("Tahoma", Font.PLAIN, 11));
+			btnAdministrador.setBounds(293, 16, 131, 23);
+			contentPane.add(btnAdministrador);
 		}
 		{
 			btnCompra = new JButton("Compra");

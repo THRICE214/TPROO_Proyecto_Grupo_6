@@ -1,0 +1,107 @@
+CREATE DATABASE BD_FARMACIA;
+USE BD_FARMACIA;
+
+-- creacion de la tabla usuario
+CREATE TABLE usuario(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    tipo_documento VARCHAR(20) NOT NULL,
+    documento VARCHAR(20) NOT NULL UNIQUE,
+    direccion VARCHAR(150),
+    telefono VARCHAR(20),
+    estado BOOLEAN NOT NULL DEFAULT TRUE,
+    admin BOOLEAN NOT NULL DEFAULT FALSE
+) AUTO_INCREMENT = 10000;
+
+SELECT * FROM usuario;
+
+-- insercion manual de primera linea con estado admin
+INSERT INTO usuario
+(nombre,email,password,tipo_documento,documento,direccion,telefono,estado,admin)
+VALUES
+('Nikolas Andre Figueroa Beas',
+'nikolasandrefb@outlook.com',
+'123456789',
+'DNI',
+'72651031',
+'Av. Nicolas de Aranibar 881',
+'+51 994193077',
+1,
+1);
+
+-- creacion y uso de procedimiento listar
+CREATE PROCEDURE SP_LISTAR()
+SELECT * FROM usuario;
+
+CALL SP_LISTAR();
+
+-- creacion y uso de procedimiento insertar
+CREATE PROCEDURE SP_INSERTAR_USUARIO(
+NOM VARCHAR(100),
+MAIL VARCHAR(100),
+PASS VARCHAR(255),
+TIPO_DOC VARCHAR(20),
+DOC VARCHAR(20),
+DIR VARCHAR(150),
+TEL VARCHAR(20),
+EST BOOLEAN,
+ADM BOOLEAN)
+INSERT INTO usuario
+(nombre,email,password,tipo_documento,documento,
+direccion,telefono,estado,admin)
+VALUES
+(NOM,MAIL,PASS,TIPO_DOC,DOC,DIR,TEL,EST,ADM);
+
+CALL SP_INSERTAR_USUARIO('Jose Miguel Martinez Lozano','josemiguelml@gmail.com','jmml123456789', 'DNI', '45835126', 'Av. Siempre Viva 123', '+51 993265127',1,0);
+
+-- creacion y uso de procedimiento insertar
+CREATE PROCEDURE SP_ELIMINAR_USUARIO(
+ID_USU INT)
+DELETE FROM usuario WHERE id=ID_USU;
+
+CALL SP_ELIMINAR_USUARIO('10001');
+
+-- creacion y uso de procedimiento editar
+CREATE PROCEDURE SP_EDITAR_USUARIO(
+ID_USU INT,
+NOM VARCHAR(100),
+MAIL VARCHAR(100),
+PASS VARCHAR(255),
+TIPO_DOC VARCHAR(20),
+DOC VARCHAR(20),
+DIR VARCHAR(150),
+TEL VARCHAR(20),
+EST BOOLEAN,
+ADM BOOLEAN)
+UPDATE usuario
+SET nombre=NOM,
+email=MAIL,
+password=PASS,
+tipo_documento=TIPO_DOC,
+documento=DOC,
+direccion=DIR,
+telefono=TEL,
+estado=EST,
+admin=ADM
+WHERE id=ID_USU;
+
+CALL SP_EDITAR_USUARIO('10002','Jose Miguel Martinez Lozano','josemiguel123@outlook.com', 'jmml123456789', 'DNI', '458351126', 'Av. Olvidados de Dios 666', '+51 986687356',1,0);
+
+CREATE PROCEDURE SP_CONSULTAR_ID_USUARIO(
+ID_USU INT)
+SELECT * FROM usuario
+WHERE id=ID_USU;
+
+CALL SP_CONSULTAR_ID_USUARIO('10002');
+
+CREATE PROCEDURE SP_CONSULTAR_DNI_USUARIO(
+DOC VARCHAR(20))
+SELECT * FROM usuario
+WHERE documento = DOC;
+
+CREATE PROCEDURE SP_ELIMINAR_USUARIO_DOC(
+DOC VARCHAR(20))
+DELETE FROM usuario
+WHERE documento = DOC;

@@ -73,6 +73,8 @@ public class Productos extends JFrame implements ActionListener {
 		setTitle("Gestion Productos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 666, 719);
+		setResizable(false); //evitar cambiar el tamaño de la ventana
+		setLocationRelativeTo(null); //centra la posicion de la ventana al ejecutar
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(194, 204, 235));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -157,7 +159,7 @@ public class Productos extends JFrame implements ActionListener {
 		{
 			txtDesC = new JTextArea();
 			txtDesC.setEnabled(false);
-			txtDesC.setBounds(333, 144, 314, 186);
+			txtDesC.setBounds(333, 144, 307, 186);
 			contentPane.add(txtDesC);
 		}
 		{
@@ -306,7 +308,7 @@ public class Productos extends JFrame implements ActionListener {
 			txtIdC.setEnabled(true);
 			cboNomC.setEnabled(true);
 			txtDesC.setEnabled(true);
-			txtDesC.setEditable(true);
+			cboNomC.setEditable(true);
 			btnBuscarP.setEnabled(false);
 			btnModificarP.setEnabled(false);
 			btnEliminarP.setEnabled(false);
@@ -321,7 +323,7 @@ public class Productos extends JFrame implements ActionListener {
 			txtIdC.setEnabled(false);
 			cboNomC.setEnabled(false);
 			txtDesC.setEnabled(false);
-			txtDesC.setEditable(false);
+			cboNomC.setEditable(false);
 			btnBuscarP.setEnabled(true);
 			btnModificarP.setEnabled(true);
 			btnEliminarP.setEnabled(true);
