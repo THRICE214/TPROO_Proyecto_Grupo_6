@@ -5,37 +5,32 @@ import java.util.List;
 
 public class Producto {
 	private int id;
-    private String nombre;
+    private String nombre, prinAct, marca, lab, presentacion;
     private double precio;
-    
     private Categoria categoria;
+    private boolean requiereReceta;
+    private boolean activo;
     
     private List<Lote> lotes = new ArrayList<>();
-    
-    //Constructores
-    public Producto(int id, String nombre, double precio, Categoria categoria, List<Lote> lotes) {
+
+	public Producto(int id, String nombre, String prinAct, String marca, String lab, String presentacion, double precio,
+			Categoria categoria, boolean requiereReceta, boolean activo, List<Lote> lotes) {
 		this.id = id;
 		this.nombre = nombre;
+		this.prinAct = prinAct;
+		this.marca = marca;
+		this.lab = lab;
+		this.presentacion = presentacion;
 		this.precio = precio;
 		this.categoria = categoria;
+		this.requiereReceta = requiereReceta;
+		this.activo = activo;
 		this.lotes = lotes;
 	}
 
 	public Producto() {
 	}
 
-	//Metodos
-	public int getStockTotal() {
-        int total = 0;
-
-        for (Lote lote : lotes) {
-            total += lote.getCantidad();
-        }
-
-        return total;
-    }
-
-	//Get's y Set's
 	public int getId() {
 		return id;
 	}
@@ -52,6 +47,38 @@ public class Producto {
 		this.nombre = nombre;
 	}
 
+	public String getPrinAct() {
+		return prinAct;
+	}
+
+	public void setPrinAct(String prinAct) {
+		this.prinAct = prinAct;
+	}
+
+	public String getMarca() {
+		return marca;
+	}
+
+	public void setMarca(String marca) {
+		this.marca = marca;
+	}
+
+	public String getLab() {
+		return lab;
+	}
+
+	public void setLab(String lab) {
+		this.lab = lab;
+	}
+
+	public String getPresentacion() {
+		return presentacion;
+	}
+
+	public void setPresentacion(String presentacion) {
+		this.presentacion = presentacion;
+	}
+
 	public double getPrecio() {
 		return precio;
 	}
@@ -66,6 +93,22 @@ public class Producto {
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	public boolean isRequiereReceta() {
+		return requiereReceta;
+	}
+
+	public void setRequiereReceta(boolean requiereReceta) {
+		this.requiereReceta = requiereReceta;
+	}
+
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
 	}
 
 	public List<Lote> getLotes() {

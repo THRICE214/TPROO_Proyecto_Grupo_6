@@ -6,15 +6,30 @@ public class Lote {
 	private int id;
 	private String numeroLote;
     private LocalDate fechaVencimiento;
-    private int cantidad;
+    private int stockActual;
     
-	public Lote(String numeroLote, LocalDate fechaVencimiento, int cantidad) {
+    private DetalleCompra detCom;
+    private Producto pro;
+    
+	public Lote(int id, String numeroLote, LocalDate fechaVencimiento, int stockActual, DetalleCompra detCom,
+			Producto pro) {
+		this.id = id;
 		this.numeroLote = numeroLote;
 		this.fechaVencimiento = fechaVencimiento;
-		this.cantidad = cantidad;
+		this.stockActual = stockActual;
+		this.detCom = detCom;
+		this.pro = pro;
 	}
-	
+
 	public Lote() {
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getNumeroLote() {
@@ -33,11 +48,27 @@ public class Lote {
 		this.fechaVencimiento = fechaVencimiento;
 	}
 
-	public int getCantidad() {
-		return cantidad;
+	public int getStockActual() {
+		return stockActual;
 	}
 
-	public void setCantidad(int cantidad) {
-		this.cantidad = cantidad;
+	public void setStockActual(int stockActual) {
+		this.stockActual = stockActual;
+	}
+
+	public DetalleCompra getDetCom() {
+		return detCom;
+	}
+
+	public void setDetCom(DetalleCompra detCom) {
+		this.detCom = detCom;
+	}
+
+	public Producto getPro() {
+		return pro;
+	}
+
+	public void setPro(Producto pro) {
+		this.pro = pro;
 	}
 }
