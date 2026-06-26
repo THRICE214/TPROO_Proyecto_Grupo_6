@@ -259,7 +259,7 @@ public class Perfil extends JFrame implements ActionListener {
 			contentPane.add(btnBus);
 		}
 		{
-			btnEli = new JButton("Eliminar");
+			btnEli = new JButton("Deshabilitar");
 			btnEli.addActionListener(this);
 			btnEli.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnEli.setBounds(650, 365, 95, 23);
@@ -530,117 +530,37 @@ public class Perfil extends JFrame implements ActionListener {
 		}
 	}
 	protected void do_btnEli_actionPerformed(ActionEvent e) {
-		if(btnEli.getText().equals("Eliminar")) {
+		if(documentoSeleccionado == null) {
 
-			if(documentoSeleccionado == null) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Seleccione primero un usuario de la tabla."
+            );
 
-	            JOptionPane.showMessageDialog(
-	                this,
-	                "Seleccione primero un usuario de la tabla."
-	            );
-
-	            return;
-	        }
-			
-	        JOptionPane.showMessageDialog(
-	            this,
-	            "Esta opcion 'BORRARA' permanentemente al usuario de la base de datos,"
-	            + "\nse recomienda cambiar el estado a 'false' (inactivo) para no perder sus datos."
-	            + "\nPara confirmar la eliminacion escriba nuevamente el documento del usuario."
-	            + "\nPara cancelarla solo deje el documento en blanco o si no ha escrito nada presione confirmar."
-	        );
-
-	        btnEli.setText("Confirmar");
-
-	        btnAgr.setEnabled(false);
-	        btnBus.setEnabled(false);
-	        btnMod.setEnabled(false);
-	        btnMosLis.setEnabled(false);
-	        btnSalir.setEnabled(false);
-
-	        txtBuscar.setEnabled(false);
-	        txtDireccion.setEnabled(false);
-	        txtMail.setEnabled(false);
-	        txtNom.setEnabled(false);
-	        txtPass.setEnabled(false);
-	        txtTelef.setEnabled(false);
+            return;
+        }
+		
+		String documento = txtDocumento.getText().trim();
 	        
-	        cboAdmin.setEnabled(false);
-	        cboEstado.setEnabled(false);
-	        cboTipDoc.setEnabled(false);
-	        
-	        txtDocumento.setText("");
-	    }
-	    else {
+	    System.out.println("Documento escrito: " + documento);
+	    System.out.println("Documento seleccionado: " + documentoSeleccionado);
+	    
+	    int filas =
+                new ArrayUsuario().DesactivarUsuario(documento);
 
-	        String documento =
-	            txtDocumento.getText().trim();
-	        
-	        System.out.println("Documento escrito: " + documento);
-	        System.out.println("Documento seleccionado: " + documentoSeleccionado);
+            if(filas > 0) {
 
-	        if(documento.isEmpty()) {
+            	JOptionPane.showMessageDialog(
+            	        this,
+            	        "Usuario desactivado correctamente."
+            	    );
 
-	            JOptionPane.showMessageDialog(
-	                this,
-	                "Eliminacion cancelada."
-	            );
+            	    limpiarCampos();
+            	    cargarUsuariosTabla();
 
-	        }
-	        else if(!documento.equals(documentoSeleccionado)) {
-
-	            JOptionPane.showMessageDialog(
-	                this,
-	                "El documento no coincide con el usuario seleccionado."
-	            );
-
-	        }
-	        else {
-
-	            int filas =
-	                new ArrayUsuario().EliminarUsuario(documento);
-
-	            if(filas > 0) {
-
-	                JOptionPane.showMessageDialog(
-	                    this,
-	                    "Usuario eliminado correctamente."
-	                );
-
-	                limpiarCampos();
-	                cargarUsuariosTabla();
-
-	                documentoSeleccionado = null;
-	                idSeleccionado = 0;
-	            }
-	            else {
-
-	                JOptionPane.showMessageDialog(
-	                    this,
-	                    "No se encontro el usuario."
-	                );
-	            }
-	        }
-
-	        btnEli.setText("Eliminar");
-	        txtBuscar.setText("");
-
-	        btnAgr.setEnabled(true);
-	        btnBus.setEnabled(true);
-	        btnMod.setEnabled(true);
-	        btnMosLis.setEnabled(true);
-	        btnSalir.setEnabled(true);
-
-	        txtBuscar.setEnabled(true);
-	        txtDireccion.setEnabled(true);
-	        txtMail.setEnabled(true);
-	        txtNom.setEnabled(true);
-	        txtPass.setEnabled(true);
-	        txtTelef.setEnabled(true);
-	        
-	        cboAdmin.setEnabled(true);
-	        cboEstado.setEnabled(true);
-	        cboTipDoc.setEnabled(true);
+            	    documentoSeleccionado = null;
+            	    idSeleccionado = 0;
+            
 	    }
 	}
 }

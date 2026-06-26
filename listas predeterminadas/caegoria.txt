@@ -1,0 +1,6 @@
+CALL SP_INSERTAR_CATEGORIA('Analgesicos', 'Medicamentos para aliviar y reducir todo tipo de dolores corporal, de cabeza o muscular.');
+CALL SP_INSERTAR_CATEGORIA('Antibioticos', 'Medicamentos destinados a combatir y eliminar infecciones causadas por bacterias en el organismo.');
+CALL SP_INSERTAR_CATEGORIA('Antigripales', 'Medicamentos para aliviar los síntomas del resfriado común, la gripe, la congestión y el malestar general.');
+CALL SP_INSERTAR_CATEGORIA('Antihistaminicos', 'Medicamentos para controlar y aliviar los síntomas de reacciones alérgicas, picazón y rinitis.');
+CALL SP_INSERTAR_CATEGORIA('Antihipertensivos', 'Medicamentos utilizados para controlar y disminuir los niveles altos de presión arterial.');
+CALL SP_INSERTAR_CATEGORIA('Antidiabeticos', 'Medicamentos destinados a controlar y regular los niveles de glucosa (azúcar) en la sangre.');

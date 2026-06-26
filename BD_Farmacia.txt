@@ -1,7 +1,7 @@
 CREATE DATABASE BD_FARMACIA;
 USE BD_FARMACIA;
 
--- #Creacion de la tabla usuario
+-- #Creacion de la tabla usuario---------------------------------------------------------------------------------------------------
 CREATE TABLE usuario(
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
@@ -32,8 +32,8 @@ VALUES
 1);
 
 -- creacion y uso de procedimiento listar
-CREATE PROCEDURE SP_LISTAR()
-SELECT * FROM usuario;
+CREATE PROCEDURE SP_LISTAR() 
+SELECT * FROM usuario ORDER BY id ASC;
 
 CALL SP_LISTAR();
 
@@ -54,14 +54,12 @@ direccion,telefono,estado,admin)
 VALUES
 (NOM,MAIL,PASS,TIPO_DOC,DOC,DIR,TEL,EST,ADM);
 
-CALL SP_INSERTAR_USUARIO('Jose Miguel Martinez Lozano','josemiguelml@gmail.com','jmml123456789', 'DNI', '45835126', 'Av. Siempre Viva 123', '+51 993265127',1,0);
-
--- creacion y uso de procedimiento insertar
+/*-- creacion y uso de procedimiento eliminar
 CREATE PROCEDURE SP_ELIMINAR_USUARIO(
 ID_USU INT)
 DELETE FROM usuario WHERE id=ID_USU;
 
-CALL SP_ELIMINAR_USUARIO('10001');
+CALL SP_ELIMINAR_USUARIO('10001');*/
 
 -- creacion y uso de procedimiento editar
 CREATE PROCEDURE SP_EDITAR_USUARIO(
@@ -87,8 +85,6 @@ estado=EST,
 admin=ADM
 WHERE id=ID_USU;
 
-CALL SP_EDITAR_USUARIO('10002','Jose Miguel Martinez Lozano','josemiguel123@outlook.com', 'jmml123456789', 'DNI', '458351126', 'Av. Olvidados de Dios 666', '+51 986687356',1,0);
-
 CREATE PROCEDURE SP_CONSULTAR_ID_USUARIO(
 ID_USU INT)
 SELECT * FROM usuario
@@ -101,21 +97,67 @@ DOC VARCHAR(20))
 SELECT * FROM usuario
 WHERE documento = DOC;
 
-CREATE PROCEDURE SP_ELIMINAR_USUARIO_DOC(
+/*CREATE PROCEDURE SP_ELIMINAR_USUARIO_DOC(
 DOC VARCHAR(20))
 DELETE FROM usuario
-WHERE documento = DOC;
+WHERE documento = DOC;*/
 
--- #Creacion de la tabla Categoria
+-- creacion del procedure desactivar usario
+CREATE PROCEDURE SP_DESACTIVAR_USUARIO(
+    IN p_documento VARCHAR(20)
+)
+UPDATE usuario
+SET estado = false
+WHERE documento = p_documento;
+
+-- #Creacion de la tabla Categoria--------------------------------------------------------------------------------------
 
 CREATE TABLE categoria (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     descripcion VARCHAR(200)
-);
+) AUTO_INCREMENT = 10000;
 
--- #Creacion de la tabla producto
+-- creacion procedure listar categoria
+CREATE PROCEDURE SP_LISTAR_C() 
+SELECT * FROM categoria ORDER BY id ASC;
 
+CALL SP_LISTAR_C();
+
+-- creacion procedure agregar catergoria
+CREATE PROCEDURE SP_INSERTAR_CATEGORIA(
+NOM VARCHAR(100),
+DES VARCHAR(200))
+INSERT INTO categoria
+(nombre,descripcion)
+VALUES
+(NOM,DES);
+
+-- creacion procedure editar categoria
+CREATE PROCEDURE SP_EDITAR_CATEGORIA(
+ID_CATE INT,
+NOM VARCHAR(100),
+DES VARCHAR(200))
+UPDATE categoria
+SET nombre=NOM,
+descripcion=DES
+WHERE id=ID_CATE;
+
+-- creacion procedure buscar por nombre
+CREATE PROCEDURE SP_CONSULTAR_NOM_CATEGORIA(
+NOM VARCHAR(100))
+SELECT * FROM categoria
+WHERE nombre = NOM;
+
+CALL SP_CONSULTAR_NOM_CATEGORIA('Pastilla');
+
+-- creacion procedure eliminar categoria
+CREATE PROCEDURE SP_ELIMINAR_CATEGORIA_NOM(
+NOM VARCHAR(100))
+DELETE FROM categoria
+WHERE nombre = NOM;
+
+-- #Creacion de la tabla producto------------------------------------------------------------------------------------------
 CREATE TABLE producto (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -133,7 +175,130 @@ CREATE TABLE producto (
         REFERENCES categoria(id)
 );
 
--- #Creacion de la tabla detalle de compra
+-- creacion del procedure listar producto
+CREATE PROCEDURE SP_LISTAR_P()
+SELECT
+    p.id,
+    p.nombre,
+    p.prin_act,
+    p.marca,
+    p.lab,
+    p.presentacion,
+    p.precio,
+    p.requiere_receta,
+    p.activo,
+    c.id AS id_categoria,
+    c.nombre AS nom_categoria
+FROM producto p
+INNER JOIN categoria c
+ON p.id_categoria = c.id
+ORDER BY p.id ASC;
+
+CALL SP_LISTAR_P();
+
+-- creacion del procedure insert producto
+CREATE PROCEDURE SP_INSERTAR_PRODUCTO(
+    p_nombre VARCHAR(100),
+    p_prin_act VARCHAR(100),
+    p_marca VARCHAR(100),
+    p_lab VARCHAR(100),
+    p_presentacion VARCHAR(100),
+    p_precio DECIMAL(10,2),
+    p_requiere_receta BOOLEAN,
+    p_activo BOOLEAN,
+    p_id_categoria INT
+)
+INSERT INTO producto(
+    nombre,
+    prin_act,
+    marca,
+    lab,
+    presentacion,
+    precio,
+    requiere_receta,
+    activo,
+    id_categoria
+)
+VALUES(
+    p_nombre,
+    p_prin_act,
+    p_marca,
+    p_lab,
+    p_presentacion,
+    p_precio,
+    p_requiere_receta,
+    p_activo,
+    p_id_categoria
+);
+
+/*CALL SP_INSERTAR_PRODUCTO(
+'Panadol Antigripal',
+'Paracetamol + Pseudoefedrina',
+'Panadol',
+'Haleon',
+'Caja de 24 tabletas',
+18.50,
+false,
+true,
+10008
+);*/
+
+-- creacion del procedure buscar producto por nombre -------------------------------------------------------------------
+CREATE PROCEDURE SP_BUSCAR_PRODUCTO_NOMBRE(
+    p_nombre VARCHAR(100)
+)
+SELECT
+    p.id,
+    p.nombre,
+    p.prin_act,
+    p.marca,
+    p.lab,
+    p.presentacion,
+    p.precio,
+    p.requiere_receta,
+    p.activo,
+    c.id AS id_categoria,
+    c.nombre AS nom_categoria
+FROM producto p
+INNER JOIN categoria c
+ON p.id_categoria = c.id
+WHERE p.nombre LIKE CONCAT('%', p_nombre, '%')
+ORDER BY p.nombre;
+
+-- creacion del procedure editar producto ------------------------------------------------------------------------------
+CREATE PROCEDURE SP_EDITAR_PRODUCTO(
+    p_id INT,
+    p_nombre VARCHAR(100),
+    p_prin_act VARCHAR(100),
+    p_marca VARCHAR(100),
+    p_lab VARCHAR(100),
+    p_presentacion VARCHAR(100),
+    p_precio DECIMAL(10,2),
+    p_requiere_receta BOOLEAN,
+    p_activo BOOLEAN,
+    p_id_categoria INT
+)
+UPDATE producto
+SET nombre = p_nombre,
+    prin_act = p_prin_act,
+    marca = p_marca,
+    lab = p_lab,
+    presentacion = p_presentacion,
+    precio = p_precio,
+    requiere_receta = p_requiere_receta,
+    activo = p_activo,
+    id_categoria = p_id_categoria
+WHERE id = p_id;
+
+-- creacion del procedure deshabilitar ---------------------------------------------------------------------------------
+CREATE PROCEDURE SP_DESHABILITAR_PRODUCTO(
+    p_id INT
+)
+UPDATE producto
+SET activo = false
+WHERE id = p_id;
+
+-- #Creacion de la tabla detalle de compra---------------------------------------------------------------------------------------
 
 CREATE TABLE compra (
     cod INT AUTO_INCREMENT PRIMARY KEY,
@@ -145,7 +310,7 @@ CREATE TABLE compra (
         REFERENCES usuario(id)
 );
 
--- #Creacion de la tabla de venta
+-- #Creacion de la tabla de venta--------------------------------------------------------------------------------------------------
 
 CREATE TABLE venta (
     cod INT AUTO_INCREMENT PRIMARY KEY,
@@ -157,7 +322,7 @@ CREATE TABLE venta (
         REFERENCES usuario(id)
 );
 
--- #Creacion de la tabla lote
+-- #Creacion de la tabla lote------------------------------------------------------------------------------------------------------
 
 CREATE TABLE lote (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -171,7 +336,7 @@ CREATE TABLE lote (
         REFERENCES producto(id)
 );
 
--- #Creacion de la tabla detalle de compra
+-- #Creacion de la tabla detalle de compra-------------------------------------------------------------------------------------------
 
 CREATE TABLE detalle_compra (
     cod INT AUTO_INCREMENT PRIMARY KEY,
@@ -192,7 +357,7 @@ CREATE TABLE detalle_compra (
         REFERENCES lote(id)
 );
 
--- #Creacion de la tabla detalle de venta
+-- #Creacion de la tabla detalle de venta--------------------------------------------------------------------------------------------------
 
 CREATE TABLE detalle_venta (
     cod INT AUTO_INCREMENT PRIMARY KEY,
@@ -212,3 +377,31 @@ CREATE TABLE detalle_venta (
     FOREIGN KEY (id_lote)
         REFERENCES lote(id)
 );
+
+-- #Lista predeterminada ----------------------------------------------------------------------------------------------
+
+-- categoria
+CALL SP_INSERTAR_CATEGORIA('Analgesicos', 'Medicamentos para aliviar y reducir todo tipo de dolores corporal, de cabeza o muscular.');
+CALL SP_INSERTAR_CATEGORIA('Antibioticos', 'Medicamentos destinados a combatir y eliminar infecciones causadas por bacterias en el organismo.');
+CALL SP_INSERTAR_CATEGORIA('Antigripales', 'Medicamentos para aliviar los síntomas del resfriado común, la gripe, la congestión y el malestar general.');
+CALL SP_INSERTAR_CATEGORIA('Antihistaminicos', 'Medicamentos para controlar y aliviar los síntomas de reacciones alérgicas, picazón y rinitis.');
+CALL SP_INSERTAR_CATEGORIA('Antihipertensivos', 'Medicamentos utilizados para controlar y disminuir los niveles altos de presión arterial.');
+CALL SP_INSERTAR_CATEGORIA('Antidiabeticos', 'Medicamentos destinados a controlar y regular los niveles de glucosa (azúcar) en la sangre.');
+
+-- producto
+-- Medicamentos Originales
+CALL SP_INSERTAR_PRODUCTO('Actron 600', 'Ibuprofeno', 'Bayer', 'Bayer S.A.', 'Caja de 20 cápsulas blandas', 14.50, false, true, 10000);
+CALL SP_INSERTAR_PRODUCTO('Amoxicilina MK', 'Amoxicilina', 'MK', 'Laboratorios MK', 'Caja con 16 cápsulas de 500mg', 12.80, true, true, 10001);
+
+-- Medicamentos Comerciales
+CALL SP_INSERTAR_PRODUCTO('Panadol Antigripal', 'Paracetamol + Pseudoefedrina', 'Panadol', 'Haleon', 'Caja de 24 tabletas', 18.50, false, true, 10002);
+CALL SP_INSERTAR_PRODUCTO('Apronax 550', 'Naproxeno Sódico', 'Apronax', 'Bayer', 'Caja de 10 tabletas', 15.00, false, true, 10000);
+CALL SP_INSERTAR_PRODUCTO('Degraler', 'Levocetirizina', 'Degraler', 'Bagó', 'Caja de 30 tabletas de 5mg', 45.20, true, true, 10003);
+
+-- Medicamentos Genéricos
+CALL SP_INSERTAR_PRODUCTO('Azitromicina Genfar', 'Azitromicina', 'Genfar', 'Laboratorios Genfar', 'Caja con 3 tabletas de 500mg', 8.90, true, true, 10001);
+CALL SP_INSERTAR_PRODUCTO('Enalapril Infamed', 'Enalapril', 'Infamed', 'Corporación Infamed', 'Caja de 30 tabletas de 20mg', 5.50, true, true, 10004);
+CALL SP_INSERTAR_PRODUCTO('Metformina IQB', 'Metformina', 'IQB', 'Laboratorios IQB', 'Caja con 30 tabletas de 850mg', 11.20, true, true, 10005);
+
+-- #Zona libre para usar scripts o calls de la DB ---------------------------------------------------------------------
+

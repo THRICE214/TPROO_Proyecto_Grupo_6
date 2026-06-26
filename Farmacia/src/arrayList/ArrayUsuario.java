@@ -144,27 +144,28 @@ public class ArrayUsuario {
 	    return usu;
 	}
 	
-	public int EliminarUsuario(String documento) {
+	public int DesactivarUsuario(String documento) {
 
-	    int filas = 0;
+	    int estado = 0;
 
 	    try {
 
 	        CallableStatement csta =
-	            ConexionMySQL.getConexion().prepareCall(
-	                "{call SP_ELIMINAR_USUARIO_DOC(?)}"
-	            );
+	            ConexionMySQL.getConexion()
+	                .prepareCall(
+	                    "{call SP_DESACTIVAR_USUARIO(?)}"
+	                );
 
 	        csta.setString(1, documento);
 
-	        filas = csta.executeUpdate();
+	        estado = csta.executeUpdate();
 
 	        csta.close();
 
-	    } catch(Exception e) {
+	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
 
-	    return filas;
+	    return estado;
 	}
 }

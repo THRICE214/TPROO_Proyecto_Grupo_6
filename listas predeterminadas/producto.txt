@@ -1,0 +1,13 @@
+-- Medicamentos Originales
+CALL SP_INSERTAR_PRODUCTO('Actron 600', 'Ibuprofeno', 'Bayer', 'Bayer S.A.', 'Caja de 20 cápsulas blandas', 14.50, false, true, 10000);
+CALL SP_INSERTAR_PRODUCTO('Amoxicilina MK', 'Amoxicilina', 'MK', 'Laboratorios MK', 'Caja con 16 cápsulas de 500mg', 12.80, true, true, 10001);
+
+-- Medicamentos Comerciales
+CALL SP_INSERTAR_PRODUCTO('Panadol Antigripal', 'Paracetamol + Pseudoefedrina', 'Panadol', 'Haleon', 'Caja de 24 tabletas', 18.50, false, true, 10002);
+CALL SP_INSERTAR_PRODUCTO('Apronax 550', 'Naproxeno Sódico', 'Apronax', 'Bayer', 'Caja de 10 tabletas', 15.00, false, true, 10000);
+CALL SP_INSERTAR_PRODUCTO('Degraler', 'Levocetirizina', 'Degraler', 'Bagó', 'Caja de 30 tabletas de 5mg', 45.20, true, true, 10003);
+
+-- Medicamentos Genéricos
+CALL SP_INSERTAR_PRODUCTO('Azitromicina Genfar', 'Azitromicina', 'Genfar', 'Laboratorios Genfar', 'Caja con 3 tabletas de 500mg', 8.90, true, true, 10001);
+CALL SP_INSERTAR_PRODUCTO('Enalapril Infamed', 'Enalapril', 'Infamed', 'Corporación Infamed', 'Caja de 30 tabletas de 20mg', 5.50, true, true, 10004);
+CALL SP_INSERTAR_PRODUCTO('Metformina IQB', 'Metformina', 'IQB', 'Laboratorios IQB', 'Caja con 30 tabletas de 850mg', 11.20, true, true, 10005);
