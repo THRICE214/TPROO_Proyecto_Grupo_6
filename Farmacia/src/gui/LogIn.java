@@ -1,10 +1,17 @@
 package gui;
 
 import java.awt.EventQueue;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import coneccion.ConexionSQLServers;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -111,6 +118,7 @@ public class LogIn extends JFrame implements ActionListener, MouseListener {
 		}
 		{
 			btnIngresar = new JButton("Ingresar");
+			btnIngresar.addActionListener(this);
 			btnIngresar.setBounds(171, 248, 89, 23);
 			contentPane.add(btnIngresar);
 		}
@@ -147,6 +155,9 @@ public class LogIn extends JFrame implements ActionListener, MouseListener {
 
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnIngresar) {
+			do_btnIngresar_actionPerformed(e);
+		}
 		if (e.getSource() == ckbMosContra) {
 			do_ckbMosContra_actionPerformed(e);
 		}
@@ -178,5 +189,54 @@ public class LogIn extends JFrame implements ActionListener, MouseListener {
 			    "Información",
 			    JOptionPane.INFORMATION_MESSAGE
 			);
+	}
+	protected void do_btnIngresar_actionPerformed(ActionEvent e) {
+
+		String usuario = txtUsuario.getText();
+		String contrasena = new String(txtContra.getPassword());
+
+		boolean credencialesValidas = validarUsuarioEnBD(usuario, contrasena);
+
+		if (credencialesValidas) {
+		    Menu ventanaMenu = new Menu();
+		    ventanaMenu.setVisible(true);
+		    ventanaMenu.setLocationRelativeTo(null);
+		    
+		    this.dispose();
+		    
+		} else {
+		    JOptionPane.showMessageDialog(this, 
+		        "Usuario o contraseña incorrectos.", 
+		        "Error de Acceso", 
+		        JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	private boolean validarUsuarioEnBD(String correo, String pass) {
+	    boolean accesoConcedido = false; 
+
+	    String sql = "SELECT * FROM usuario WHERE email = ? AND password = ?";
+	    
+	    try {
+	        Connection conn = ConexionSQLServers.getConexion(); 
+
+	        PreparedStatement pst = conn.prepareStatement(sql);
+	        pst.setString(1, correo);
+	        pst.setString(2, pass);
+	        
+	        ResultSet rs = pst.executeQuery();
+	        
+	        if (rs.next()) {
+	            accesoConcedido = true; 
+	        }
+	        
+	        rs.close();
+	        pst.close();
+	        conn.close();
+	        
+	    } catch (SQLException e) {
+	        System.out.println("Error al conectar o validar usuario: " + e.getMessage());
+	    }
+	    
+	    return accesoConcedido;
 	}
 }

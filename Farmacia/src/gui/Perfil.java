@@ -182,6 +182,7 @@ public class Perfil extends JFrame implements ActionListener {
 		}
 		{
 			btnSalir = new JButton("Salir");
+			btnSalir.addActionListener(this);
 			btnSalir.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnSalir.setBounds(755, 365, 89, 23);
 			contentPane.add(btnSalir);
@@ -395,6 +396,9 @@ public class Perfil extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
 		if (e.getSource() == btnEli) {
 			do_btnEli_actionPerformed(e);
 		}
@@ -641,6 +645,23 @@ public class Perfil extends JFrame implements ActionListener {
 	        cboAdmin.setEnabled(true);
 	        cboEstado.setEnabled(true);
 	        cboTipDoc.setEnabled(true);
+	    }
+	}
+	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+
+	    int opcion = JOptionPane.showConfirmDialog(this, 
+	            "¿Está seguro de que desea regresar al menú principal?", 
+	            "Regresar al Menú", 
+	            JOptionPane.YES_NO_OPTION, 
+	            JOptionPane.QUESTION_MESSAGE);
+	    
+	    if (opcion == JOptionPane.YES_OPTION) {
+	   
+	        Menu ventanaMenu = new Menu(); 
+	        ventanaMenu.setVisible(true);
+	        ventanaMenu.setLocationRelativeTo(null);
+	      
+	        this.dispose();
 	    }
 	}
 }

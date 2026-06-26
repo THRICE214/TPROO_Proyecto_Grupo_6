@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
@@ -232,6 +234,7 @@ public class Productos extends JFrame implements ActionListener {
 		}
 		{
 			btnSalir = new JButton("Salir");
+			btnSalir.addActionListener(this);
 			btnSalir.setBounds(10, 646, 89, 23);
 			contentPane.add(btnSalir);
 		}
@@ -253,6 +256,9 @@ public class Productos extends JFrame implements ActionListener {
 
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
 		if (e.getSource() == btnAgregarC) {
 			do_btnAgregarC_actionPerformed(e);
 		}
@@ -335,5 +341,20 @@ public class Productos extends JFrame implements ActionListener {
 			limpiarCampos();
 			btnAgregarC.setText("Agregar");
 		}
+	}
+	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+	    int opcion = JOptionPane.showConfirmDialog(this, 
+	            "¿Está seguro de que desea regresar al menú principal?", 
+	            "Regresar al Menú", 
+	            JOptionPane.YES_NO_OPTION, 
+	            JOptionPane.QUESTION_MESSAGE);
+	    
+	    if (opcion == JOptionPane.YES_OPTION) {
+	        Menu ventanaMenu = new Menu(); 
+	        ventanaMenu.setVisible(true);
+	        ventanaMenu.setLocationRelativeTo(null);
+	        
+	        this.dispose();
+	    }
 	}
 }

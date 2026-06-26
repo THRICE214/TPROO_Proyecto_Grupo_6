@@ -189,10 +189,17 @@ public class V1 extends JFrame implements ActionListener {
 			contentPane.add(txtBusqueda);
 			txtBusqueda.setColumns(10);
 		}
+		{
+			btnSalir = new JButton("Salir");
+			btnSalir.addActionListener(this);
+			btnSalir.setBounds(5, 309, 66, 23);
+			contentPane.add(btnSalir);
+		}
 	}
 	
 	private List<Medicamento> listaMedicamentos = new ArrayList<Medicamento>();
 	private JTextField txtBusqueda;
+	private JButton btnSalir;
 	
 	//sobrecarga de métodos agregado (parte 1)
 	public void mostrar(Medicamento med) {
@@ -215,6 +222,9 @@ public class V1 extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
 		if (e.getSource() == btnNewButton) {
 			do_btnNewButton_actionPerformed(e);
 		}
@@ -414,5 +424,20 @@ public class V1 extends JFrame implements ActionListener {
 		    JOptionPane.showMessageDialog(null, "Medicamento modificado correctamente");
 		    limpiarCampos(); 
 		}
+	}
+	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+		int opcion = JOptionPane.showConfirmDialog(this, 
+	            "¿Está seguro de que desea regresar al menú principal?", 
+	            "Regresar al Menú", 
+	            JOptionPane.YES_NO_OPTION, 
+	            JOptionPane.QUESTION_MESSAGE);
+	    
+	    if (opcion == JOptionPane.YES_OPTION) {
+	        Menu ventanaMenu = new Menu(); 
+	        ventanaMenu.setVisible(true);
+	        ventanaMenu.setLocationRelativeTo(null);
+	        
+	        this.dispose();
+	    }
 	}
 }

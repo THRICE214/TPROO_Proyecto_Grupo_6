@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.sql.ResultSet;
 
 import clase.Usuario;
-import coneccion.ConexionMySQL;
+import coneccion.ConexionSQLServers;
 
 public class ArrayUsuario {
 	public ArrayList<Usuario> ListarUsuario() {
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
 		try {
-			CallableStatement csta = ConexionMySQL.getConexion().prepareCall("{call SP_LISTAR()}");
+			CallableStatement csta = ConexionSQLServers.getConexion().prepareCall("{call SP_LISTAR()}");
 			ResultSet rs = csta.executeQuery();
 			Usuario usu;
 			while(rs.next()) {
@@ -45,7 +45,7 @@ public class ArrayUsuario {
 	    try {
 
 	        CallableStatement csta =
-	            ConexionMySQL.getConexion().prepareCall(
+	        	ConexionSQLServers.getConexion().prepareCall(
 	                "{call SP_EDITAR_USUARIO(?,?,?,?,?,?,?,?,?,?)}"
 	            );
 
@@ -78,7 +78,7 @@ public class ArrayUsuario {
 	    try {
 
 	        CallableStatement csta =
-	            ConexionMySQL.getConexion().prepareCall(
+	        	ConexionSQLServers.getConexion().prepareCall(
 	                "{call SP_INSERTAR_USUARIO(?,?,?,?,?,?,?,?,?)}"
 	            );
 
@@ -110,7 +110,7 @@ public class ArrayUsuario {
 	    try {
 
 	        CallableStatement csta =
-	            ConexionMySQL.getConexion().prepareCall(
+	        	ConexionSQLServers.getConexion().prepareCall(
 	                "{call SP_CONSULTAR_DNI_USUARIO(?)}"
 	            );
 
@@ -151,7 +151,7 @@ public class ArrayUsuario {
 	    try {
 
 	        CallableStatement csta =
-	            ConexionMySQL.getConexion().prepareCall(
+	        	ConexionSQLServers.getConexion().prepareCall(
 	                "{call SP_ELIMINAR_USUARIO_DOC(?)}"
 	            );
 
