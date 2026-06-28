@@ -5,6 +5,11 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import arrayList.ArrayUsuario;
+import clase.SesionUsuario;
+import clase.Usuario;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -32,7 +37,6 @@ public class LogIn extends JFrame implements ActionListener, MouseListener {
 	private JCheckBox ckbMosContra;
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_3;
-	private JLabel label;
 	private JLabel lblNewLabel_4;
 
 	/**
@@ -89,7 +93,7 @@ public class LogIn extends JFrame implements ActionListener, MouseListener {
 			contentPane.add(lblNewLabel_3);
 		}
 		{
-			lblNewLabel = new JLabel("Usuario:");
+			lblNewLabel = new JLabel("E-mail:");
 			lblNewLabel.setBounds(99, 130, 57, 14);
 			contentPane.add(lblNewLabel);
 		}
@@ -111,6 +115,7 @@ public class LogIn extends JFrame implements ActionListener, MouseListener {
 		}
 		{
 			btnIngresar = new JButton("Ingresar");
+			btnIngresar.addActionListener(this);
 			btnIngresar.setBounds(171, 248, 89, 23);
 			contentPane.add(btnIngresar);
 		}
@@ -139,14 +144,12 @@ public class LogIn extends JFrame implements ActionListener, MouseListener {
 		    lblNewLabel_2,
 		    contentPane.getComponentCount() - 1
 		);
-		{
-			label = new JLabel("New label");
-			label.setBounds(167, 61, 46, 14);
-			contentPane.add(label);
-		}
 
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnIngresar) {
+			do_btnIngresar_actionPerformed(e);
+		}
 		if (e.getSource() == ckbMosContra) {
 			do_ckbMosContra_actionPerformed(e);
 		}
@@ -178,5 +181,50 @@ public class LogIn extends JFrame implements ActionListener, MouseListener {
 			    "Información",
 			    JOptionPane.INFORMATION_MESSAGE
 			);
+	}
+	protected void do_btnIngresar_actionPerformed(ActionEvent e) {
+		String correoIngresado = txtUsuario.getText().trim();
+		String contraseniaIngresada = new String(txtContra.getPassword());
+
+		ArrayUsuario objArrayUsuario = new ArrayUsuario();
+
+		try {
+		    // Garantizamos que la sesión empiece completamente vacía al intentar loguearse
+		    SesionUsuario.getInstancia().cerrarSesion();
+
+		    // 2. Buscamos al usuario en la base de datos usando el método nuevo que creaste
+		    Usuario usu = objArrayUsuario.ConsultarUsuarioEmail(correoIngresado);
+
+		    if (usu == null) {
+		        // Alerta si el correo no existe en la BD
+		        JOptionPane.showMessageDialog(this, "El correo electrónico no está registrado.", "Error de Login", JOptionPane.ERROR_MESSAGE);
+		    } 
+		    else if (!usu.getPassword().equals(contraseniaIngresada)) {
+		        // 3. Alerta si la contraseña no coincide
+		        JOptionPane.showMessageDialog(this, "Contraseña incorrecta.", "Error de Login", JOptionPane.ERROR_MESSAGE);
+		    } 
+		    else if (!usu.isEstado()) {
+		        // 4. Alerta si el usuario está desactivado (estado = false)
+		        JOptionPane.showMessageDialog(this, "Su usuario se encuentra desactivado. Contacte al administrador.", "Acceso Denegado", JOptionPane.WARNING_MESSAGE);
+		    } 
+		    else {
+		        // ¡TODO CORRECTO! 
+		        // Guardamos el objeto usuario completo en la sesión global (RAM)
+		        SesionUsuario.getInstancia().iniciarSesion(usu);
+		        
+		        JOptionPane.showMessageDialog(this, "¡Bienvenido " + usu.getNombre() + "!", "Acceso Concedido", JOptionPane.INFORMATION_MESSAGE);
+		        
+		        // 5. Abrimos tu menú principal 
+		        // (Asegúrate de cambiar 'MenuPrincipal' por el nombre real de tu clase de menú)
+		        Menu ventanaMenu = new Menu();
+		        ventanaMenu.setVisible(true);
+		        
+		        // Cerramos la ventana de Login actual para liberar memoria
+		        this.dispose();
+		    }
+		} catch (Exception ex) {
+		    ex.printStackTrace();
+		    JOptionPane.showMessageDialog(this, "Error al procesar el inicio de sesión.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

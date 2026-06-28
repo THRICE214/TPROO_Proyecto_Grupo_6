@@ -168,4 +168,46 @@ public class ArrayUsuario {
 
 	    return estado;
 	}
+	
+	public Usuario ConsultarUsuarioEmail(String email) {
+	    Usuario usu = null;
+	    try {
+	        // 1. Nos conectamos y preparamos la llamada al nuevo procedimiento de MySQL
+	        CallableStatement csta = ConexionMySQL.getConexion().prepareCall(
+	            "{call SP_CONSULTAR_EMAIL_USUARIO(?)}"
+	        );
+
+	        // 2. Le pasamos el email que el usuario escribió en el Login
+	        csta.setString(1, email);
+
+	        // 3. Ejecutamos la consulta y recibimos el resultado
+	        ResultSet rs = csta.executeQuery();
+
+	        // 4. Si la base de datos encontró al usuario, extraemos sus datos y creamos el objeto
+	        if(rs.next()) {
+	            usu = new Usuario(
+	                rs.getInt("id"),
+	                rs.getString("nombre"),
+	                rs.getString("email"),
+	                rs.getString("password"),
+	                rs.getString("tipo_documento"),
+	                rs.getString("documento"),
+	                rs.getString("direccion"),
+	                rs.getString("telefono"),
+	                rs.getBoolean("estado"),
+	                rs.getBoolean("admin")
+	            );
+	        }
+
+	        // 5. Cerramos los flujos por seguridad
+	        rs.close();
+	        csta.close();
+
+	    } catch(Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    // Si lo encontró, devuelve el usuario completo; si no existe, devuelve null
+	    return usu;
+	}
 }

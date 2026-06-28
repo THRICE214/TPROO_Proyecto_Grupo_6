@@ -57,7 +57,7 @@ public class Productos extends JFrame implements ActionListener {
 	private JButton btnBuscarC;
 	private JButton btnEliminarC;
 	private JButton btnModificarC;
-	private JButton btnSalir;
+	private JButton btnRegresar;
 	private JLabel lblNewLabel_10;
 	private JLabel lblNewLabel_11;
 	private JLabel lblNewLabel_12;
@@ -240,9 +240,10 @@ public class Productos extends JFrame implements ActionListener {
 			contentPane.add(btnModificarC);
 		}
 		{
-			btnSalir = new JButton("Salir");
-			btnSalir.setBounds(10, 594, 89, 23);
-			contentPane.add(btnSalir);
+			btnRegresar = new JButton("Regresar");
+			btnRegresar.addActionListener(this);
+			btnRegresar.setBounds(10, 594, 89, 23);
+			contentPane.add(btnRegresar);
 		}
 		{
 			lblNewLabel_10 = new JLabel("Marca:");
@@ -474,6 +475,9 @@ public class Productos extends JFrame implements ActionListener {
 		cargarProductoTabla();
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnRegresar) {
+			do_btnRegresar_actionPerformed(e);
+		}
 		if (e.getSource() == btnEliminarP) {
 			do_btnEliminarP_actionPerformed(e);
 		}
@@ -1141,5 +1145,11 @@ public class Productos extends JFrame implements ActionListener {
 	    } else {
 	        JOptionPane.showMessageDialog(this, "No se logró deshabilitar el producto.");
 	    }
+	}
+	protected void do_btnRegresar_actionPerformed(ActionEvent e) {
+		Menu ventanaMenu = new Menu();
+	    ventanaMenu.setVisible(true);
+	    
+	    this.dispose();
 	}
 }

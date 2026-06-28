@@ -110,6 +110,15 @@ UPDATE usuario
 SET estado = false
 WHERE documento = p_documento;
 
+-- creacion del procedure consultar por email
+CREATE PROCEDURE SP_CONSULTAR_EMAIL_USUARIO(
+    IN p_email VARCHAR(100)
+)
+SELECT * FROM usuario
+WHERE email = p_email;
+
+CALL SP_CONSULTAR_EMAIL_USUARIO('nikolasandrefb@outlook.com');
+
 -- #Creacion de la tabla Categoria--------------------------------------------------------------------------------------
 
 CREATE TABLE categoria (
