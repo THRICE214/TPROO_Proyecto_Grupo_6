@@ -293,10 +293,10 @@ public class Menu extends JFrame implements ActionListener {
 	    }
 	}
 	protected void do_btnCompra_actionPerformed(ActionEvent e) {
-		JOptionPane.showMessageDialog(this, 
-	            "En Desarrollo.", 
-	            "Acceso Restringido", 
-	            JOptionPane.WARNING_MESSAGE);
+		Compras ventanaCompra = new Compras();
+	    ventanaCompra.setVisible(true);
+	    
+	    this.dispose();
 	}
 	protected void do_btnVenta_actionPerformed(ActionEvent e) {
 		JOptionPane.showMessageDialog(this, 

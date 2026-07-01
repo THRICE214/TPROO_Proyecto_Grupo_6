@@ -182,7 +182,7 @@ CREATE TABLE producto (
     
     FOREIGN KEY (id_categoria)
         REFERENCES categoria(id)
-);
+) AUTO_INCREMENT = 10000;
 
 -- creacion del procedure listar producto
 CREATE PROCEDURE SP_LISTAR_P()
@@ -310,14 +310,19 @@ WHERE id = p_id;
 -- #Creacion de la tabla detalle de compra---------------------------------------------------------------------------------------
 
 CREATE TABLE compra (
-    cod INT AUTO_INCREMENT PRIMARY KEY,
+    cod INT PRIMARY KEY AUTO_INCREMENT,
     fecha DATE NOT NULL,
+    estado BOOLEAN NOT NULL DEFAULT TRUE,
     
     id_usuario INT NOT NULL,
     
     FOREIGN KEY (id_usuario)
         REFERENCES usuario(id)
-);
+) AUTO_INCREMENT = 10000;
+
+-- creacion del procedure insertar compra ------------------------------------------------------------------------------
+CREATE PROCEDURE SP_INSERTAR_COMPRA(p_fecha DATE, p_id_usuario INT)
+INSERT INTO compra (fecha, estado, id_usuario) VALUES (p_fecha, TRUE, p_id_usuario);
 
 -- #Creacion de la tabla de venta--------------------------------------------------------------------------------------------------
 
@@ -345,6 +350,10 @@ CREATE TABLE lote (
         REFERENCES producto(id)
 );
 
+-- creacion del procedure insertar lote --------------------------------------------------------------------------------
+CREATE PROCEDURE SP_INSERTAR_LOTE(p_nro_lote VARCHAR(50), p_vencimiento DATE, p_stock INT, p_id_producto INT)
+INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto) VALUES (p_nro_lote, p_vencimiento, p_stock, p_id_producto);
+
 -- #Creacion de la tabla detalle de compra-------------------------------------------------------------------------------------------
 
 CREATE TABLE detalle_compra (
@@ -365,6 +374,33 @@ CREATE TABLE detalle_compra (
     FOREIGN KEY (id_lote)
         REFERENCES lote(id)
 );
+
+-- creacion del procedure insertar detalle de compra ----------------------------------------------------------------------------
+CREATE PROCEDURE SP_INSERTAR_DETALLE_COMPRA(p_cant INT, p_costo_uni DECIMAL(10,2), p_id_compra INT, p_id_producto INT, p_id_lote INT)
+INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote) VALUES (p_cant, p_costo_uni, p_id_compra, p_id_producto, p_id_lote);
+
+-- creacion del procedur listar compra detalladas ------------------------------------------------------------------------
+DELIMITER //
+CREATE PROCEDURE SP_LISTAR_DETALLE_COMPRA()
+BEGIN
+    SELECT 
+        c.cod AS id_compra,
+        c.fecha,
+        u.nombre AS nombre_usuario,
+        p.id AS id_producto,
+        p.nombre AS nombre_producto,
+        dc.cant,
+        dc.costo_uni,
+        l.numero_lote,
+        dc.cod AS id_detalle
+    FROM compra c
+    INNER JOIN usuario u ON c.id_usuario = u.id
+    INNER JOIN detalle_compra dc ON c.cod = dc.id_compra
+    INNER JOIN producto p ON dc.id_producto = p.id
+    INNER JOIN lote l ON dc.id_lote = l.id
+    ORDER BY c.cod DESC;
+END //
+DELIMITER ;
 
 -- #Creacion de la tabla detalle de venta--------------------------------------------------------------------------------------------------
 
@@ -414,3 +450,4 @@ CALL SP_INSERTAR_PRODUCTO('Metformina IQB', 'Metformina', 'IQB', 'Laboratorios I
 
 -- #Zona libre para usar scripts o calls de la DB ---------------------------------------------------------------------
 
+SELECT * FROM usuario;

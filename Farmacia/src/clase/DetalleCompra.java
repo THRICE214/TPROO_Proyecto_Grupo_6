@@ -22,6 +22,11 @@ public class DetalleCompra {
 	public DetalleCompra() {
 	}
 
+	//obtener el costo del detalle de compra
+	public Double getSubTotal() {
+		return this.cant * this.costoUni;
+	}
+	
 	public int getCod() {
 		return cod;
 	}

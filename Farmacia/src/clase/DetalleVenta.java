@@ -11,7 +11,7 @@ public class DetalleVenta {
 	public DetalleVenta(int cod, int cant, double precioUni, Venta venta, Producto pro, Lote lote) {
 		this.cod = cod;
 		this.cant = cant;
-		this.precioUni = precioUni; //hostorico
+		this.precioUni = precioUni; //historico
 		this.venta = venta;
 		this.pro = pro;
 		this.lote = lote;

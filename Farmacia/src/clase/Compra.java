@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Compra {
 	private int cod;
 	private LocalDate fecha;
+	private boolean estado;
 	
 	private Usuario usuario;
 	private ArrayList<DetalleCompra> detCom;
@@ -16,9 +17,10 @@ public class Compra {
 	        .sum();
 	}
 
-	public Compra(int cod, LocalDate fecha, Usuario usuario, ArrayList<DetalleCompra> detCom) {
+	public Compra(int cod, LocalDate fecha, boolean estado, Usuario usuario, ArrayList<DetalleCompra> detCom) {
 		this.cod = cod;
 		this.fecha = fecha;
+		this.estado = estado;
 		this.usuario = usuario;
 		this.detCom = detCom;
 	}
@@ -40,6 +42,14 @@ public class Compra {
 
 	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
+	}
+
+	public boolean isEstado() {
+		return estado;
+	}
+
+	public void setEstado(boolean estado) {
+		this.estado = estado;
 	}
 
 	public Usuario getUsuario() {
