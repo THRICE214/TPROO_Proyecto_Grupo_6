@@ -11,6 +11,7 @@ import arrayList.ArrayDetalleCompra;
 import clase.DetalleCompra;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -20,6 +21,7 @@ import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
@@ -454,6 +456,7 @@ public class Compras extends JFrame implements ActionListener {
 		}
 		{
 			btnLisAnu = new JButton("Listar Anulados");
+			btnLisAnu.addActionListener(this);
 			btnLisAnu.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnLisAnu.setBounds(1078, 664, 126, 23);
 			contentPane.add(btnLisAnu);
@@ -479,7 +482,8 @@ public class Compras extends JFrame implements ActionListener {
 				modeloTable = new DefaultTableModel(
 					    new Object[][] {},
 					    new String[] {
-					        "ID Compra", "Fecha", "Usuario", "ID Producto", "Producto", "Cantidad", "Costo Uni.", "Subtotal", "N° Lote"
+					        "ID Compra", "Fecha", "Usuario", "ID Producto", "Producto", "Cantidad", "Costo Uni.", "Subtotal", "N° Lote",
+					        "ID Detalle"
 					    }
 					) {
 					    private static final long serialVersionUID = 1L;
@@ -515,12 +519,14 @@ public class Compras extends JFrame implements ActionListener {
 		}
 		{
 			btnAnularCompra = new JButton("Anular Compra Realizada");
+			btnAnularCompra.addActionListener(this);
 			btnAnularCompra.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnAnularCompra.setBounds(192, 698, 166, 23);
 			contentPane.add(btnAnularCompra);
 		}
 		{
 			btnBuscar = new JButton("Buscar");
+			btnBuscar.addActionListener(this);
 			btnBuscar.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnBuscar.setBounds(368, 664, 89, 23);
 			contentPane.add(btnBuscar);
@@ -529,6 +535,9 @@ public class Compras extends JFrame implements ActionListener {
 			cboBuscar = new JComboBox();
 			cboBuscar.setBounds(467, 664, 131, 22);
 			contentPane.add(cboBuscar);
+			
+			cboBuscar.addItem("Seleccione...");
+			cboBuscar.addItem("Fecha");
 		}
 		{
 			txtBuscar = new JTextField();
@@ -565,10 +574,109 @@ public class Compras extends JFrame implements ActionListener {
 	    tblCom.getColumnModel().getColumn(6).setPreferredWidth(85);  
 	    tblCom.getColumnModel().getColumn(7).setPreferredWidth(85);  
 	    tblCom.getColumnModel().getColumn(8).setPreferredWidth(200); 
+	    tblCom.getColumnModel().getColumn(9).setWidth(0);
 	}
 	
 	private void pasarDatosDeTablaACampos(int fila) {
-		//por desarrollarse
+	    try {
+
+	        int idDetalle =
+	                Integer.parseInt(
+	                        tblCom.getValueAt(fila, 9).toString());
+
+	        ArrayDetalleCompra adc =
+	                new ArrayDetalleCompra();
+
+	        DetalleCompra det =
+	                adc.obtenerDetalleCompra(idDetalle);
+
+	        if (det == null)
+	            return;
+
+	        int idCompra =
+	                det.getCompra().getCod();
+
+	        double total =
+	                adc.obtenerTotalCompra(idCompra);
+
+	        // COMPRA
+	        txtCodCom.setText(
+	                String.valueOf(idCompra));
+
+	        txtFechaCom.setText(
+	                det.getCompra().getFecha().toString());
+
+	        txtUsuarioCom.setText(
+	                det.getCompra().getUsuario().getNombre());
+
+	        txtEstCom.setText(
+	                det.getCompra().isEstado()
+	                        ? "ACTIVO"
+	                        : "ANULADO");
+
+	        txtCosTotCom.setText(
+	                String.format("%.2f", total));
+
+	        // DETALLE
+	        txtCodDC.setText(
+	                String.valueOf(det.getCod()));
+
+	        txtCantDC.setText(
+	                String.valueOf(det.getCant()));
+
+	        txtPreUniDC.setText(
+	                String.format("%.2f",
+	                        det.getCostoUni()));
+
+	        txtSubTotDC.setText(
+	                String.format("%.2f",
+	                        det.getSubTotal()));
+
+	        // PRODUCTO
+	        txtCodP.setText(
+	                String.valueOf(
+	                        det.getPro().getId()));
+
+	        cboNomP.removeAllItems();
+	        cboNomP.addItem(det.getPro().getNombre());
+	        cboNomP.setSelectedItem(det.getPro().getNombre());
+
+	        if (det.getPro().getCategoria() != null) {
+	            txtCatP.setText(
+	                    det.getPro()
+	                       .getCategoria()
+	                       .getNombre());
+	        } else {
+	            txtCatP.setText("");
+	        }
+
+	        txtPresP.setText(
+	                det.getPro()
+	                   .getPresentacion());
+
+	        // LOTE
+	        txtCodLote.setText(
+	                String.valueOf(
+	                        det.getLote().getId()));
+
+	        txtNroLote.setText(
+	                det.getLote()
+	                   .getNumeroLote());
+
+	        txtFechaVenciLote.setText(
+	                det.getLote()
+	                   .getFechaVencimiento()
+	                   .toString()
+	                   .replace("-", "/"));
+
+	        txtStockActLote.setText(
+	                String.valueOf(
+	                        det.getLote()
+	                           .getStockActual()));
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
 	}
 	
 	// ◄--- AQUÍ: CAMPOS BLOQUEADOS POR DEFECTO AL ABRIR LA VENTANA
@@ -633,6 +741,9 @@ public class Compras extends JFrame implements ActionListener {
 	    txtNroLote.setText("");
 	    txtFechaVenciLote.setText("");
 	    txtStockActLote.setText("");
+	    
+	    cboBuscar.setEnabled(true);
+	    txtBuscar.setEnabled(true);
 	}
 	
 	// ◄--- AQUÍ: SE DEFINE QUÉ SE HABILITA AL PRESIONAR "NUEVA COMPRA"
@@ -655,6 +766,9 @@ public class Compras extends JFrame implements ActionListener {
 	    btnCancelar.setEnabled(true);
 	    btnLimpiar.setEnabled(true);
 	    
+	    cboBuscar.setEnabled(false);
+	    txtBuscar.setEnabled(false);
+	    
 	    btnNueCom.setEnabled(false);
 	    btnBuscar.setEnabled(false);
 	    btnAnularCompra.setEnabled(false);
@@ -666,6 +780,9 @@ public class Compras extends JFrame implements ActionListener {
 	
 	// FEATURE 2: AUTOCOMPLETAR CAMPOS DEL PRODUCTO Y SUGERIR LOTE CRONOLÓGICO
 	private void sincronizarCamposDelProducto() {
+		if (!estadoComprando) {
+	        return;
+	    }
 	    // 1. Obtenemos el nombre seleccionado en el combo
 	    Object seleccionado = cboNomP.getSelectedItem();
 	    if (seleccionado == null) return;
@@ -732,6 +849,15 @@ public class Compras extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnLisAnu) {
+			do_btnLisAnu_actionPerformed(e);
+		}
+		if (e.getSource() == btnAnularCompra) {
+			do_btnAnularCompra_actionPerformed(e);
+		}
+		if (e.getSource() == btnBuscar) {
+			do_btnBuscar_actionPerformed(e);
+		}
 		if (e.getSource() == btnLisTodo) {
 			do_btnLisTodo_actionPerformed(e);
 		}
@@ -1146,8 +1272,40 @@ public class Compras extends JFrame implements ActionListener {
 	            d.getCant(),                            // 6. Cantidad
 	            d.getCostoUni(),                        // 7. Costo Uni
 	            d.getSubTotal(),                        // 8. Subtotal (Método de tu clase)
-	            d.getLote().getNumeroLote()             // 9. N° Lote
+	            d.getLote().getNumeroLote(),             // 9. N° Lote
+	            d.getCod()   // ID DETALLE oculto
 	        };
+	        modeloTable.addRow(fila);
+	    }
+	}
+	
+	//listar por fecha
+	public void listarPorFecha(
+	        java.time.LocalDate fecha) {
+
+	    modeloTable.setRowCount(0);
+
+	    ArrayDetalleCompra adc =
+	            new ArrayDetalleCompra();
+
+	    ArrayList<DetalleCompra> lista =
+	            adc.listarDetallesPorFecha(fecha);
+
+	    for (DetalleCompra d : lista) {
+
+	        Object[] fila = {
+	            d.getCompra().getCod(),
+	            d.getCompra().getFecha(),
+	            d.getCompra().getUsuario().getNombre(),
+	            d.getPro().getId(),
+	            d.getPro().getNombre(),
+	            d.getCant(),
+	            d.getCostoUni(),
+	            d.getSubTotal(),
+	            d.getLote().getNumeroLote(),
+	            d.getCod()
+	        };
+
 	        modeloTable.addRow(fila);
 	    }
 	}
@@ -1160,5 +1318,42 @@ public class Compras extends JFrame implements ActionListener {
 	    
 	    // Volver a habilitar
 	    btnLisTodo.setEnabled(true);
+	}
+	protected void do_btnBuscar_actionPerformed(ActionEvent e) {
+		if (cboBuscar.getSelectedItem().equals("Seleccione...")) {
+			JOptionPane.showMessageDialog(this,"Por favor seleccione una opcion de filtrado.");
+		}
+		else if (cboBuscar.getSelectedItem().equals("Fecha")) {
+			try {
+
+			    String texto =
+			            txtBuscar.getText().trim();
+
+			    if (texto.isEmpty()) {
+			        JOptionPane.showMessageDialog(
+			                this,
+			                "Ingrese una fecha.");
+			        return;
+			    }
+
+			    LocalDate fecha =
+			            LocalDate.parse(texto);
+
+			    listarPorFecha(fecha);
+
+			} catch (Exception ex) {
+
+			    JOptionPane.showMessageDialog(
+			            this,
+			            "Formato incorrecto.\n"
+			          + "Use: AAAA-MM-DD");
+			}
+		}
+	}
+	protected void do_btnAnularCompra_actionPerformed(ActionEvent e) {
+		JOptionPane.showMessageDialog(this, "En Proceso...");
+	}
+	protected void do_btnLisAnu_actionPerformed(ActionEvent e) {
+		JOptionPane.showMessageDialog(this, "En Proceso...");
 	}
 }

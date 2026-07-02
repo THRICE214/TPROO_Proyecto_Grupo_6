@@ -1,7 +1,8 @@
 CREATE DATABASE BD_FARMACIA;
 USE BD_FARMACIA;
 
--- #Creacion de la tabla usuario---------------------------------------------------------------------------------------------------
+-- #area de creacion de tablas -------------------------------------------------------------------------------------------
+-- #Creacion de la tabla usuario++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 CREATE TABLE usuario(
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
@@ -17,7 +18,117 @@ CREATE TABLE usuario(
 
 SELECT * FROM usuario;
 
--- insercion manual de primera linea con estado admin
+-- #Creacion de la tabla Categoria+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CREATE TABLE categoria (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(200)
+) AUTO_INCREMENT = 10000;
+
+-- #Creacion de la tabla producto+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CREATE TABLE producto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    prin_act VARCHAR(100),
+    marca VARCHAR(100),
+    lab VARCHAR(100),
+    presentacion VARCHAR(100),
+    precio DECIMAL(10,2) NOT NULL,
+    requiere_receta BOOLEAN NOT NULL,
+    activo BOOLEAN NOT NULL,
+    
+    id_categoria INT NOT NULL,
+    
+    FOREIGN KEY (id_categoria)
+        REFERENCES categoria(id)
+) AUTO_INCREMENT = 10000;
+
+-- #Creacion de la tabla compra+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CREATE TABLE compra (
+    cod INT PRIMARY KEY AUTO_INCREMENT,
+    fecha DATE NOT NULL,
+    estado BOOLEAN NOT NULL DEFAULT TRUE,
+    
+    id_usuario INT NOT NULL,
+    
+    FOREIGN KEY (id_usuario)
+        REFERENCES usuario(id)
+) AUTO_INCREMENT = 10000;
+
+-- #Creacion de la tabla de venta--------------------------------------------------------------------------------------------------
+
+CREATE TABLE venta (
+    cod INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    
+    id_usuario INT NOT NULL,
+    
+    FOREIGN KEY (id_usuario)
+        REFERENCES usuario(id)
+);
+
+-- #Creacion de la tabla lote------------------------------------------------------------------------------------------------------
+
+CREATE TABLE lote (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    numero_lote VARCHAR(50) NOT NULL,
+    fecha_vencimiento DATE NOT NULL,
+    stock_actual INT NOT NULL,
+    
+    id_producto INT NOT NULL,
+    
+    FOREIGN KEY (id_producto)
+        REFERENCES producto(id)
+);
+
+-- #Creacion de la tabla detalle de compra-------------------------------------------------------------------------------------------
+
+CREATE TABLE detalle_compra (
+    cod INT AUTO_INCREMENT PRIMARY KEY,
+    cant INT NOT NULL,
+    costo_uni DECIMAL(10,2) NOT NULL,
+    
+    id_compra INT NOT NULL,
+    id_producto INT NOT NULL,
+    id_lote INT NOT NULL,
+    
+    FOREIGN KEY (id_compra)
+        REFERENCES compra(cod),
+        
+    FOREIGN KEY (id_producto)
+        REFERENCES producto(id),
+        
+    FOREIGN KEY (id_lote)
+        REFERENCES lote(id)
+);
+
+-- #Creacion de la tabla detalle de venta--------------------------------------------------------------------------------------------------
+
+CREATE TABLE detalle_venta (
+    cod INT AUTO_INCREMENT PRIMARY KEY,
+    cant INT NOT NULL,
+    precio_unitario DECIMAL(10,2) NOT NULL,
+    
+    id_venta INT NOT NULL,
+    id_producto INT NOT NULL,
+    id_lote INT NOT NULL,
+    
+    FOREIGN KEY (id_venta)
+        REFERENCES venta(cod),
+        
+    FOREIGN KEY (id_producto)
+        REFERENCES producto(id),
+        
+    FOREIGN KEY (id_lote)
+        REFERENCES lote(id)
+);
+
+-- #seccion de procedures -----------------------------------------------------------------------------------------------------------------
+-- #USUARIO +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+-- insercion manual de primera linea con estado admin --------------------------------------------------------------------------------
 INSERT INTO usuario
 (nombre,email,password,tipo_documento,documento,direccion,telefono,estado,admin)
 VALUES
@@ -31,13 +142,13 @@ VALUES
 1,
 1);
 
--- creacion y uso de procedimiento listar
+-- creacion y uso de procedimiento listar --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_LISTAR() 
 SELECT * FROM usuario ORDER BY id ASC;
 
 CALL SP_LISTAR();
 
--- creacion y uso de procedimiento insertar
+-- creacion y uso de procedimiento insertar --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_INSERTAR_USUARIO(
 NOM VARCHAR(100),
 MAIL VARCHAR(100),
@@ -61,7 +172,7 @@ DELETE FROM usuario WHERE id=ID_USU;
 
 CALL SP_ELIMINAR_USUARIO('10001');*/
 
--- creacion y uso de procedimiento editar
+-- creacion y uso de procedimiento editar --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_EDITAR_USUARIO(
 ID_USU INT,
 NOM VARCHAR(100),
@@ -85,12 +196,15 @@ estado=EST,
 admin=ADM
 WHERE id=ID_USU;
 
+-- creacion del prcedure consultar por id --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_CONSULTAR_ID_USUARIO(
 ID_USU INT)
 SELECT * FROM usuario
 WHERE id=ID_USU;
 
 CALL SP_CONSULTAR_ID_USUARIO('10002');
+
+-- creacion del procedure consultar por dni --------------------------------------------------------------------------------
 
 CREATE PROCEDURE SP_CONSULTAR_DNI_USUARIO(
 DOC VARCHAR(20))
@@ -102,7 +216,7 @@ DOC VARCHAR(20))
 DELETE FROM usuario
 WHERE documento = DOC;*/
 
--- creacion del procedure desactivar usario
+-- creacion del procedure desactivar usario --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_DESACTIVAR_USUARIO(
     IN p_documento VARCHAR(20)
 )
@@ -110,7 +224,7 @@ UPDATE usuario
 SET estado = false
 WHERE documento = p_documento;
 
--- creacion del procedure consultar por email
+-- creacion del procedure consultar por email --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_CONSULTAR_EMAIL_USUARIO(
     IN p_email VARCHAR(100)
 )
@@ -119,21 +233,15 @@ WHERE email = p_email;
 
 CALL SP_CONSULTAR_EMAIL_USUARIO('nikolasandrefb@outlook.com');
 
--- #Creacion de la tabla Categoria--------------------------------------------------------------------------------------
+-- #CATEGORIA +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-CREATE TABLE categoria (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL,
-    descripcion VARCHAR(200)
-) AUTO_INCREMENT = 10000;
-
--- creacion procedure listar categoria
+-- creacion procedure listar categoria --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_LISTAR_C() 
 SELECT * FROM categoria ORDER BY id ASC;
 
 CALL SP_LISTAR_C();
 
--- creacion procedure agregar catergoria
+-- creacion procedure agregar catergoria --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_INSERTAR_CATEGORIA(
 NOM VARCHAR(100),
 DES VARCHAR(200))
@@ -142,7 +250,7 @@ INSERT INTO categoria
 VALUES
 (NOM,DES);
 
--- creacion procedure editar categoria
+-- creacion procedure editar categoria --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_EDITAR_CATEGORIA(
 ID_CATE INT,
 NOM VARCHAR(100),
@@ -152,7 +260,7 @@ SET nombre=NOM,
 descripcion=DES
 WHERE id=ID_CATE;
 
--- creacion procedure buscar por nombre
+-- creacion procedure buscar por nombre --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_CONSULTAR_NOM_CATEGORIA(
 NOM VARCHAR(100))
 SELECT * FROM categoria
@@ -160,31 +268,15 @@ WHERE nombre = NOM;
 
 CALL SP_CONSULTAR_NOM_CATEGORIA('Pastilla');
 
--- creacion procedure eliminar categoria
+-- creacion procedure eliminar categoria --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_ELIMINAR_CATEGORIA_NOM(
 NOM VARCHAR(100))
 DELETE FROM categoria
 WHERE nombre = NOM;
 
--- #Creacion de la tabla producto------------------------------------------------------------------------------------------
-CREATE TABLE producto (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    prin_act VARCHAR(100),
-    marca VARCHAR(100),
-    lab VARCHAR(100),
-    presentacion VARCHAR(100),
-    precio DECIMAL(10,2) NOT NULL,
-    requiere_receta BOOLEAN NOT NULL,
-    activo BOOLEAN NOT NULL,
-    
-    id_categoria INT NOT NULL,
-    
-    FOREIGN KEY (id_categoria)
-        REFERENCES categoria(id)
-) AUTO_INCREMENT = 10000;
+-- #PRODUCTO ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
--- creacion del procedure listar producto
+-- creacion del procedure listar producto--------------------------------------------------------------------------------
 CREATE PROCEDURE SP_LISTAR_P()
 SELECT
     p.id,
@@ -205,7 +297,7 @@ ORDER BY p.id ASC;
 
 CALL SP_LISTAR_P();
 
--- creacion del procedure insert producto
+-- creacion del procedure insert producto--------------------------------------------------------------------------------
 CREATE PROCEDURE SP_INSERTAR_PRODUCTO(
     p_nombre VARCHAR(100),
     p_prin_act VARCHAR(100),
@@ -252,7 +344,7 @@ true,
 10008
 );*/
 
--- creacion del procedure buscar producto por nombre -------------------------------------------------------------------
+-- creacion del procedure buscar producto por nombre --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_BUSCAR_PRODUCTO_NOMBRE(
     p_nombre VARCHAR(100)
 )
@@ -274,7 +366,7 @@ ON p.id_categoria = c.id
 WHERE p.nombre LIKE CONCAT('%', p_nombre, '%')
 ORDER BY p.nombre;
 
--- creacion del procedure editar producto ------------------------------------------------------------------------------
+-- creacion del procedure editar producto --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_EDITAR_PRODUCTO(
     p_id INT,
     p_nombre VARCHAR(100),
@@ -299,7 +391,7 @@ SET nombre = p_nombre,
     id_categoria = p_id_categoria
 WHERE id = p_id;
 
--- creacion del procedure deshabilitar ---------------------------------------------------------------------------------
+-- creacion del procedure deshabilitar producto --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_DESHABILITAR_PRODUCTO(
     p_id INT
 )
@@ -307,74 +399,35 @@ UPDATE producto
 SET activo = false
 WHERE id = p_id;
 
--- #Creacion de la tabla detalle de compra---------------------------------------------------------------------------------------
-
-CREATE TABLE compra (
-    cod INT PRIMARY KEY AUTO_INCREMENT,
-    fecha DATE NOT NULL,
-    estado BOOLEAN NOT NULL DEFAULT TRUE,
-    
-    id_usuario INT NOT NULL,
-    
-    FOREIGN KEY (id_usuario)
-        REFERENCES usuario(id)
-) AUTO_INCREMENT = 10000;
-
+-- #COMPRA ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- creacion del procedure insertar compra ------------------------------------------------------------------------------
 CREATE PROCEDURE SP_INSERTAR_COMPRA(p_fecha DATE, p_id_usuario INT)
 INSERT INTO compra (fecha, estado, id_usuario) VALUES (p_fecha, TRUE, p_id_usuario);
 
--- #Creacion de la tabla de venta--------------------------------------------------------------------------------------------------
+-- creacion del procedure total compra --------------------------------------------------------------------------------
+DELIMITER //
 
-CREATE TABLE venta (
-    cod INT AUTO_INCREMENT PRIMARY KEY,
-    fecha DATE NOT NULL,
-    
-    id_usuario INT NOT NULL,
-    
-    FOREIGN KEY (id_usuario)
-        REFERENCES usuario(id)
-);
+CREATE PROCEDURE SP_TOTAL_COMPRA(
+    IN p_idCompra INT
+)
+BEGIN
+    SELECT IFNULL(SUM(cant * costo_uni),0) AS total
+    FROM detalle_compra
+    WHERE id_compra = p_idCompra;
+END //
 
--- #Creacion de la tabla lote------------------------------------------------------------------------------------------------------
+DELIMITER ;
 
-CREATE TABLE lote (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    numero_lote VARCHAR(50) NOT NULL,
-    fecha_vencimiento DATE NOT NULL,
-    stock_actual INT NOT NULL,
-    
-    id_producto INT NOT NULL,
-    
-    FOREIGN KEY (id_producto)
-        REFERENCES producto(id)
-);
+CALL SP_TOTAL_COMPRA(10000);
 
+-- #VENTA +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+-- #LOTE ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- creacion del procedure insertar lote --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_INSERTAR_LOTE(p_nro_lote VARCHAR(50), p_vencimiento DATE, p_stock INT, p_id_producto INT)
 INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto) VALUES (p_nro_lote, p_vencimiento, p_stock, p_id_producto);
 
--- #Creacion de la tabla detalle de compra-------------------------------------------------------------------------------------------
-
-CREATE TABLE detalle_compra (
-    cod INT AUTO_INCREMENT PRIMARY KEY,
-    cant INT NOT NULL,
-    costo_uni DECIMAL(10,2) NOT NULL,
-    
-    id_compra INT NOT NULL,
-    id_producto INT NOT NULL,
-    id_lote INT NOT NULL,
-    
-    FOREIGN KEY (id_compra)
-        REFERENCES compra(cod),
-        
-    FOREIGN KEY (id_producto)
-        REFERENCES producto(id),
-        
-    FOREIGN KEY (id_lote)
-        REFERENCES lote(id)
-);
-
+-- #DETALLE DE COMPRA +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- creacion del procedure insertar detalle de compra ----------------------------------------------------------------------------
 CREATE PROCEDURE SP_INSERTAR_DETALLE_COMPRA(p_cant INT, p_costo_uni DECIMAL(10,2), p_id_compra INT, p_id_producto INT, p_id_lote INT)
 INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote) VALUES (p_cant, p_costo_uni, p_id_compra, p_id_producto, p_id_lote);
@@ -402,30 +455,106 @@ BEGIN
 END //
 DELIMITER ;
 
--- #Creacion de la tabla detalle de venta--------------------------------------------------------------------------------------------------
+-- creacion del procedure obtener_detalle_compra por id -----------------------------------------------------------------------
+DELIMITER //
 
-CREATE TABLE detalle_venta (
-    cod INT AUTO_INCREMENT PRIMARY KEY,
-    cant INT NOT NULL,
-    precio_unitario DECIMAL(10,2) NOT NULL,
-    
-    id_venta INT NOT NULL,
-    id_producto INT NOT NULL,
-    id_lote INT NOT NULL,
-    
-    FOREIGN KEY (id_venta)
-        REFERENCES venta(cod),
-        
-    FOREIGN KEY (id_producto)
-        REFERENCES producto(id),
-        
-    FOREIGN KEY (id_lote)
-        REFERENCES lote(id)
-);
+CREATE PROCEDURE SP_OBTENER_DETALLE_COMPRA(
+    IN p_idDetalle INT
+)
+BEGIN
+    SELECT
+        dc.cod AS id_detalle,
+        dc.cant,
+        dc.costo_uni,
 
--- #Lista predeterminada ----------------------------------------------------------------------------------------------
+        c.cod AS id_compra,
+        c.fecha,
+        c.estado,
 
--- categoria
+        u.id AS id_usuario,
+        u.nombre AS nombre_usuario,
+
+        p.id AS id_producto,
+        p.nombre AS nom_producto,
+        p.prin_act,
+        p.marca,
+        p.lab,
+        p.presentacion,
+        p.precio,
+        p.requiere_receta,
+        p.activo,
+
+        cat.id AS id_categoria,
+        cat.nombre AS nom_categoria,
+        cat.descripcion,
+
+        l.id AS id_lote,
+        l.numero_lote,
+        l.fecha_vencimiento,
+        l.stock_actual
+
+    FROM detalle_compra dc
+    INNER JOIN compra c
+        ON dc.id_compra = c.cod
+    INNER JOIN usuario u
+        ON c.id_usuario = u.id
+    INNER JOIN producto p
+        ON dc.id_producto = p.id
+    INNER JOIN categoria cat
+        ON p.id_categoria = cat.id
+    INNER JOIN lote l
+        ON dc.id_lote = l.id
+    WHERE dc.cod = p_idDetalle;
+END //
+
+DELIMITER ;
+
+CALL SP_OBTENER_DETALLE_COMPRA(10000);
+
+-- creacion del procedure listar detalle compra por fecha --------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE SP_LISTAR_DETALLE_COMPRA_FECHA(
+    IN p_fecha DATE
+)
+BEGIN
+    SELECT
+        dc.cod AS id_detalle,
+        dc.cant,
+        dc.costo_uni,
+
+        c.cod AS id_compra,
+        c.fecha,
+
+        u.nombre AS nombre_usuario,
+
+        p.id AS id_producto,
+        p.nombre AS nombre_producto,
+
+        l.numero_lote
+    FROM detalle_compra dc
+    INNER JOIN compra c
+        ON dc.id_compra = c.cod
+    INNER JOIN usuario u
+        ON c.id_usuario = u.id
+    INNER JOIN producto p
+        ON dc.id_producto = p.id
+    INNER JOIN lote l
+        ON dc.id_lote = l.id
+    WHERE c.fecha = p_fecha
+    ORDER BY c.cod, dc.cod;
+END //
+
+DELIMITER ;
+
+
+-- #DETALLE DE VENTA ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+-- #Listas predeterminadas ----------------------------------------------------------------------------------------------
+
+-- categorias
 CALL SP_INSERTAR_CATEGORIA('Analgesicos', 'Medicamentos para aliviar y reducir todo tipo de dolores corporal, de cabeza o muscular.');
 CALL SP_INSERTAR_CATEGORIA('Antibioticos', 'Medicamentos destinados a combatir y eliminar infecciones causadas por bacterias en el organismo.');
 CALL SP_INSERTAR_CATEGORIA('Antigripales', 'Medicamentos para aliviar los síntomas del resfriado común, la gripe, la congestión y el malestar general.');
@@ -433,7 +562,7 @@ CALL SP_INSERTAR_CATEGORIA('Antihistaminicos', 'Medicamentos para controlar y al
 CALL SP_INSERTAR_CATEGORIA('Antihipertensivos', 'Medicamentos utilizados para controlar y disminuir los niveles altos de presión arterial.');
 CALL SP_INSERTAR_CATEGORIA('Antidiabeticos', 'Medicamentos destinados a controlar y regular los niveles de glucosa (azúcar) en la sangre.');
 
--- producto
+-- productos
 -- Medicamentos Originales
 CALL SP_INSERTAR_PRODUCTO('Actron 600', 'Ibuprofeno', 'Bayer', 'Bayer S.A.', 'Caja de 20 cápsulas blandas', 14.50, false, true, 10000);
 CALL SP_INSERTAR_PRODUCTO('Amoxicilina MK', 'Amoxicilina', 'MK', 'Laboratorios MK', 'Caja con 16 cápsulas de 500mg', 12.80, true, true, 10001);
@@ -450,4 +579,4 @@ CALL SP_INSERTAR_PRODUCTO('Metformina IQB', 'Metformina', 'IQB', 'Laboratorios I
 
 -- #Zona libre para usar scripts o calls de la DB ---------------------------------------------------------------------
 
-SELECT * FROM usuario;
+SELECT * FROM lote;
