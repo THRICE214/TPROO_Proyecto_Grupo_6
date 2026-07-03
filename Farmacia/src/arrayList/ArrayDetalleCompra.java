@@ -235,4 +235,58 @@ public class ArrayDetalleCompra {
 
         return lista;
     }
+    
+    public ArrayList<DetalleCompra> listarInventario() {
+        ArrayList<DetalleCompra> lista = new ArrayList<>();
+
+        try (
+            Connection conn = ConexionMySQL.getConexion();
+            CallableStatement csta = conn.prepareCall("{call SP_LISTAR_DETALLE_COMPRA_INVENTARIO()}");
+            ResultSet rs = csta.executeQuery()
+        ) {
+            while (rs.next()) {
+                // Usuario
+                Usuario usu = new Usuario();
+                usu.setNombre(rs.getString("nombre_usuario"));
+
+                // Compra
+                Compra com = new Compra();
+                com.setCod(rs.getInt("id_compra"));
+                com.setFecha(rs.getDate("fecha_adquisicion").toLocalDate());
+                com.setUsuario(usu);
+
+                // Categoria
+                Categoria cat = new Categoria();
+                cat.setId(rs.getInt("id_categoria"));
+                cat.setNombre(rs.getString("nombre_categoria"));
+
+                // Producto (Añadimos la categoría)
+                Producto pro = new Producto();
+                pro.setId(rs.getInt("id_producto"));
+                pro.setNombre(rs.getString("nombre_producto"));
+                pro.setCategoria(cat);
+
+                // Lote
+                Lote lot = new Lote();
+                lot.setId(rs.getInt("id_lote"));
+                lot.setNumeroLote(rs.getString("numero_lote"));
+                lot.setStockActual(rs.getInt("stock_actual"));
+                lot.setFechaVencimiento(rs.getDate("fecha_vencimiento").toLocalDate());
+
+                // DetalleCompra
+                DetalleCompra det = new DetalleCompra();
+                det.setCod(rs.getInt("id_detalle"));
+                det.setCant(rs.getInt("stock_inicial"));
+                det.setCostoUni(rs.getDouble("costo_uni"));
+                det.setCompra(com);
+                det.setPro(pro);
+                det.setLote(lot);
+
+                lista.add(det);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
 }

@@ -67,7 +67,7 @@ CREATE TABLE venta (
     
     FOREIGN KEY (id_usuario)
         REFERENCES usuario(id)
-);
+) AUTO_INCREMENT = 10000;
 
 -- #Creacion de la tabla lote------------------------------------------------------------------------------------------------------
 
@@ -81,7 +81,7 @@ CREATE TABLE lote (
     
     FOREIGN KEY (id_producto)
         REFERENCES producto(id)
-);
+) AUTO_INCREMENT = 10000;
 
 -- #Creacion de la tabla detalle de compra-------------------------------------------------------------------------------------------
 
@@ -102,7 +102,7 @@ CREATE TABLE detalle_compra (
         
     FOREIGN KEY (id_lote)
         REFERENCES lote(id)
-);
+) AUTO_INCREMENT = 10000;
 
 -- #Creacion de la tabla detalle de venta--------------------------------------------------------------------------------------------------
 
@@ -123,7 +123,7 @@ CREATE TABLE detalle_venta (
         
     FOREIGN KEY (id_lote)
         REFERENCES lote(id)
-);
+) AUTO_INCREMENT = 10000;
 
 -- #seccion de procedures -----------------------------------------------------------------------------------------------------------------
 -- #USUARIO +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -547,6 +547,37 @@ END //
 
 DELIMITER ;
 
+-- creacion porcedure detalle compra inventario ------------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE SP_LISTAR_DETALLE_COMPRA_INVENTARIO()
+BEGIN
+    SELECT
+        l.id AS id_lote,
+        l.numero_lote,
+        p.nombre AS nombre_producto,
+        l.stock_actual,
+        l.fecha_vencimiento,
+        dc.cant AS stock_inicial,
+        dc.costo_uni,
+        (dc.cant * dc.costo_uni) AS costo_lote,
+        c.fecha AS fecha_adquisicion,
+        u.nombre AS nombre_usuario,
+        p.id AS id_producto,
+        dc.cod AS id_detalle,
+        c.cod AS id_compra,
+        cat.id AS id_categoria,       -- NUEVO
+        cat.nombre AS nombre_categoria -- NUEVO
+    FROM detalle_compra dc
+    INNER JOIN compra c ON dc.id_compra = c.cod
+    INNER JOIN usuario u ON c.id_usuario = u.id
+    INNER JOIN producto p ON dc.id_producto = p.id
+    INNER JOIN categoria cat ON p.id_categoria = cat.id -- NUEVO JOIN
+    INNER JOIN lote l ON dc.id_lote = l.id
+    ORDER BY c.fecha DESC, l.fecha_vencimiento ASC, l.numero_lote ASC;
+END //
+
+DELIMITER ;
 
 -- #DETALLE DE VENTA ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -578,5 +609,3 @@ CALL SP_INSERTAR_PRODUCTO('Enalapril Infamed', 'Enalapril', 'Infamed', 'Corporac
 CALL SP_INSERTAR_PRODUCTO('Metformina IQB', 'Metformina', 'IQB', 'Laboratorios IQB', 'Caja con 30 tabletas de 850mg', 11.20, true, true, 10005);
 
 -- #Zona libre para usar scripts o calls de la DB ---------------------------------------------------------------------
-
-SELECT * FROM lote;

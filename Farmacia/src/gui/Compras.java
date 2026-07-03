@@ -567,7 +567,7 @@ public class Compras extends JFrame implements ActionListener {
 	    tblCom.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	    tblCom.getColumnModel().getColumn(0).setPreferredWidth(80);  
 	    tblCom.getColumnModel().getColumn(1).setPreferredWidth(90);  
-	    tblCom.getColumnModel().getColumn(2).setPreferredWidth(160); 
+	    tblCom.getColumnModel().getColumn(2).setPreferredWidth(180); 
 	    tblCom.getColumnModel().getColumn(3).setPreferredWidth(85);  
 	    tblCom.getColumnModel().getColumn(4).setPreferredWidth(200); 
 	    tblCom.getColumnModel().getColumn(5).setPreferredWidth(70);  

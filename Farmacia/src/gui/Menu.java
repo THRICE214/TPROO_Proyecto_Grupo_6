@@ -70,6 +70,7 @@ public class Menu extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		{
 			btnInvent = new JButton("Inventario");
+			btnInvent.addActionListener(this);
 			btnInvent.setBounds(161, 421, 105, 23);
 			contentPane.add(btnInvent);
 		}
@@ -217,6 +218,9 @@ public class Menu extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnInvent) {
+			do_btnInvent_actionPerformed(e);
+		}
 		if (e.getSource() == btnRegistro) {
 			do_btnRegistro_actionPerformed(e);
 		}
@@ -309,5 +313,11 @@ public class Menu extends JFrame implements ActionListener {
 	            "En Desarrollo.", 
 	            "Acceso Restringido", 
 	            JOptionPane.WARNING_MESSAGE);
+	}
+	protected void do_btnInvent_actionPerformed(ActionEvent e) {
+		Inventario ventanaInventario = new Inventario();
+	    ventanaInventario.setVisible(true);
+	    
+	    this.dispose();
 	}
 }
