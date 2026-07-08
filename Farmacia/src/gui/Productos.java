@@ -241,6 +241,7 @@ public class Productos extends JFrame implements ActionListener {
 		}
 		{
 			btnRegresar = new JButton("Regresar");
+			btnRegresar.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnRegresar.addActionListener(this);
 			btnRegresar.setBounds(10, 594, 89, 23);
 			contentPane.add(btnRegresar);

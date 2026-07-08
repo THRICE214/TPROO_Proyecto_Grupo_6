@@ -19,6 +19,10 @@ public class DetalleVenta {
 
 	public DetalleVenta() {
 	}
+	
+	public double getSubTotal() {
+	    return this.cant * this.precioUni;
+	}
 
 	public int getCod() {
 		return cod;

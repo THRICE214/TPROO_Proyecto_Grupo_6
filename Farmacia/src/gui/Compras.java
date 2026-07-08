@@ -110,12 +110,12 @@ public class Compras extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public Compras() {
-		setTitle("Seccion Compras");
+		setTitle("Sección Compras");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1230, 772);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(214, 214, 214));
+		contentPane.setBackground(new Color(204, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -175,7 +175,7 @@ public class Compras extends JFrame implements ActionListener {
 			txtCosTotCom = new JTextField();
 			txtCosTotCom.setHorizontalAlignment(SwingConstants.RIGHT);
 			txtCosTotCom.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			txtCosTotCom.setBounds(262, 82, 86, 20);
+			txtCosTotCom.setBounds(262, 79, 86, 20);
 			contentPane.add(txtCosTotCom);
 			txtCosTotCom.setColumns(10);
 		}
@@ -282,6 +282,7 @@ public class Compras extends JFrame implements ActionListener {
 		}
 		{
 			cboNomP = new JComboBox();
+			cboNomP.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			cboNomP.setEditable(true);
 			cboNomP.setBounds(77, 292, 271, 22);
 			contentPane.add(cboNomP);
@@ -495,7 +496,7 @@ public class Compras extends JFrame implements ActionListener {
 
 					tblCom = new JTable();
 					tblCom.setModel(modeloTable);
-					java.awt.Color amarilloPalido = new java.awt.Color(255, 255, 204); 
+					java.awt.Color amarilloPalido = new java.awt.Color(204, 204, 255); 
 					tblCom.getTableHeader().setBackground(amarilloPalido);
 					tblCom.getTableHeader().setOpaque(true); 
 					tblCom.setFillsViewportHeight(true);

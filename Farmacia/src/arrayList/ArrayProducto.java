@@ -216,4 +216,41 @@ public class ArrayProducto {
 	    }
 	    return estado;
 	}
+	
+	public ArrayList<Producto> ListarProductoActivo() {
+
+	    ArrayList<Producto> lista = new ArrayList<>();
+
+	    try {
+
+	        CallableStatement cs =
+	            ConexionMySQL.getConexion()
+	            .prepareCall("{call SP_LISTAR_PRODUCTOS_ACTIVOS()}");
+
+	        ResultSet rs = cs.executeQuery();
+
+	        while (rs.next()) {
+
+	            Categoria c = new Categoria();
+	            c.setId(rs.getInt("id_categoria"));
+	            c.setNombre(rs.getString("categoria"));
+
+	            Producto p = new Producto();
+
+	            p.setId(rs.getInt("id"));
+	            p.setNombre(rs.getString("nombre"));
+	            p.setPresentacion(rs.getString("presentacion"));
+	            p.setPrecio(rs.getDouble("precio"));
+	            p.setActivo(rs.getBoolean("activo"));
+	            p.setCategoria(c);
+
+	            lista.add(p);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return lista;
+	}
 }

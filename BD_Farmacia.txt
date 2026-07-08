@@ -399,6 +399,28 @@ UPDATE producto
 SET activo = false
 WHERE id = p_id;
 
+-- creacion del procedure para listar solo activos -----------------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE SP_LISTAR_PRODUCTOS_ACTIVOS()
+BEGIN
+    SELECT
+        p.id,
+        p.nombre,
+        p.presentacion,
+        p.precio,
+        p.activo,
+        c.id AS id_categoria,
+        c.nombre AS categoria
+    FROM producto p
+    INNER JOIN categoria c
+        ON p.id_categoria = c.id
+    WHERE p.activo = 1
+    ORDER BY p.nombre;
+END//
+
+DELIMITER ;
+
 -- #COMPRA ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- creacion del procedure insertar compra ------------------------------------------------------------------------------
 CREATE PROCEDURE SP_INSERTAR_COMPRA(p_fecha DATE, p_id_usuario INT)
@@ -426,6 +448,31 @@ CALL SP_TOTAL_COMPRA(10000);
 -- creacion del procedure insertar lote --------------------------------------------------------------------------------
 CREATE PROCEDURE SP_INSERTAR_LOTE(p_nro_lote VARCHAR(50), p_vencimiento DATE, p_stock INT, p_id_producto INT)
 INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto) VALUES (p_nro_lote, p_vencimiento, p_stock, p_id_producto);
+
+
+-- listar lotes disponibles de un producto ordenados por vencimiento -----------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE SP_LISTAR_LOTES_PRODUCTO(
+    IN p_id_producto INT
+)
+BEGIN
+    SELECT
+        l.id,
+        l.numero_lote,
+        l.fecha_vencimiento,
+        l.stock_actual,
+        p.id AS id_producto,
+        p.nombre
+    FROM lote l
+    INNER JOIN producto p
+        ON l.id_producto = p.id
+    WHERE l.id_producto = p_id_producto
+      AND l.stock_actual > 0
+    ORDER BY l.fecha_vencimiento ASC;
+END //
+
+DELIMITER ;
 
 -- #DETALLE DE COMPRA +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- creacion del procedure insertar detalle de compra ----------------------------------------------------------------------------
@@ -580,8 +627,98 @@ END //
 DELIMITER ;
 
 -- #DETALLE DE VENTA ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- creacion del procedure listar detalle venta --------------------------------------------------------------------------
+DELIMITER //
 
+CREATE PROCEDURE SP_LISTAR_DETALLE_VENTA()
+BEGIN
+    SELECT 
+        v.cod AS id_venta,
+        v.fecha,
+        u.nombre AS nombre_usuario,
 
+        p.id AS id_producto,
+        p.nombre AS nombre_producto,
+        p.presentacion,
+        p.precio,
+
+        cat.id AS id_categoria,
+        cat.nombre AS nombre_categoria,
+
+        dv.cant,
+        dv.precio_unitario,
+        (dv.cant * dv.precio_unitario) AS subtotal,
+
+        l.id AS id_lote,
+        l.numero_lote,
+        l.fecha_vencimiento,
+        l.stock_actual,
+
+        dv.cod AS id_detalle
+
+    FROM venta v
+    INNER JOIN usuario u 
+        ON v.id_usuario = u.id
+    INNER JOIN detalle_venta dv 
+        ON v.cod = dv.id_venta
+    INNER JOIN producto p 
+        ON dv.id_producto = p.id
+    INNER JOIN categoria cat
+        ON p.id_categoria = cat.id
+    INNER JOIN lote l 
+        ON dv.id_lote = l.id
+    ORDER BY v.cod DESC, dv.cod ASC;
+END //
+
+DELIMITER ;
+
+-- creacion del procedure buscar detalle venta por fecha ----------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE SP_LISTAR_DETALLE_VENTA_FECHA(
+    IN p_fecha DATE
+)
+BEGIN
+    SELECT 
+        v.cod AS id_venta,
+        v.fecha,
+        u.nombre AS nombre_usuario,
+
+        p.id AS id_producto,
+        p.nombre AS nombre_producto,
+        p.presentacion,
+        p.precio,
+
+        cat.id AS id_categoria,
+        cat.nombre AS nombre_categoria,
+
+        dv.cant,
+        dv.precio_unitario,
+        (dv.cant * dv.precio_unitario) AS subtotal,
+
+        l.id AS id_lote,
+        l.numero_lote,
+        l.fecha_vencimiento,
+        l.stock_actual,
+
+        dv.cod AS id_detalle
+
+    FROM venta v
+    INNER JOIN usuario u 
+        ON v.id_usuario = u.id
+    INNER JOIN detalle_venta dv 
+        ON v.cod = dv.id_venta
+    INNER JOIN producto p 
+        ON dv.id_producto = p.id
+    INNER JOIN categoria cat
+        ON p.id_categoria = cat.id
+    INNER JOIN lote l 
+        ON dv.id_lote = l.id
+    WHERE v.fecha = p_fecha
+    ORDER BY v.cod DESC, dv.cod ASC;
+END //
+
+DELIMITER ;
 
 -- #Listas predeterminadas ----------------------------------------------------------------------------------------------
 
@@ -609,3 +746,4 @@ CALL SP_INSERTAR_PRODUCTO('Enalapril Infamed', 'Enalapril', 'Infamed', 'Corporac
 CALL SP_INSERTAR_PRODUCTO('Metformina IQB', 'Metformina', 'IQB', 'Laboratorios IQB', 'Caja con 30 tabletas de 850mg', 11.20, true, true, 10005);
 
 -- #Zona libre para usar scripts o calls de la DB ---------------------------------------------------------------------
+Call SP_LISTAR_DETALLE_VENTA();
