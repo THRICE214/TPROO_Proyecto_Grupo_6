@@ -253,4 +253,104 @@ public class ArrayVenta {
 
 		return lista;
 	}
+	
+	public DetalleVenta obtenerDetalleVenta(int idDetalle) {
+
+		DetalleVenta detalle = null;
+
+		Connection cn = null;
+		CallableStatement cs = null;
+		ResultSet rs = null;
+
+		try {
+			cn = ConexionMySQL.getConexion();
+			cs = cn.prepareCall("{CALL SP_OBTENER_DETALLE_VENTA(?)}");
+			cs.setInt(1, idDetalle);
+
+			rs = cs.executeQuery();
+
+			if (rs.next()) {
+
+				Usuario usuario = new Usuario();
+				usuario.setId(rs.getInt("id_usuario"));
+				usuario.setNombre(rs.getString("nombre_usuario"));
+
+				Venta venta = new Venta();
+				venta.setCod(rs.getInt("id_venta"));
+				venta.setFecha(rs.getDate("fecha").toLocalDate());
+				venta.setUsuario(usuario);
+
+				Categoria categoria = new Categoria();
+				categoria.setId(rs.getInt("id_categoria"));
+				categoria.setNombre(rs.getString("nom_categoria"));
+				categoria.setDescripcion(rs.getString("descripcion"));
+
+				Producto producto = new Producto();
+				producto.setId(rs.getInt("id_producto"));
+				producto.setNombre(rs.getString("nom_producto"));
+				producto.setPrinAct(rs.getString("prin_act"));
+				producto.setMarca(rs.getString("marca"));
+				producto.setLab(rs.getString("lab"));
+				producto.setPresentacion(rs.getString("presentacion"));
+				producto.setPrecio(rs.getDouble("precio"));
+				producto.setRequiereReceta(rs.getBoolean("requiere_receta"));
+				producto.setActivo(rs.getBoolean("activo"));
+				producto.setCategoria(categoria);
+
+				Lote lote = new Lote();
+				lote.setId(rs.getInt("id_lote"));
+				lote.setNumeroLote(rs.getString("numero_lote"));
+				lote.setFechaVencimiento(rs.getDate("fecha_vencimiento").toLocalDate());
+				lote.setStockActual(rs.getInt("stock_actual"));
+				lote.setPro(producto);
+
+				detalle = new DetalleVenta();
+				detalle.setCod(rs.getInt("id_detalle"));
+				detalle.setCant(rs.getInt("cant"));
+				detalle.setPrecioUni(rs.getDouble("precio_unitario"));
+				detalle.setVenta(venta);
+				detalle.setPro(producto);
+				detalle.setLote(lote);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try { if (rs != null) rs.close(); } catch (Exception e) {}
+			try { if (cs != null) cs.close(); } catch (Exception e) {}
+			try { if (cn != null) cn.close(); } catch (Exception e) {}
+		}
+
+		return detalle;
+	}
+	
+	public double obtenerTotalVenta(int idVenta) {
+
+		double total = 0;
+
+		Connection cn = null;
+		CallableStatement cs = null;
+		ResultSet rs = null;
+
+		try {
+			cn = ConexionMySQL.getConexion();
+			cs = cn.prepareCall("{CALL SP_TOTAL_VENTA(?)}");
+			cs.setInt(1, idVenta);
+
+			rs = cs.executeQuery();
+
+			if (rs.next()) {
+				total = rs.getDouble("total");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try { if (rs != null) rs.close(); } catch (Exception e) {}
+			try { if (cs != null) cs.close(); } catch (Exception e) {}
+			try { if (cn != null) cn.close(); } catch (Exception e) {}
+		}
+
+		return total;
+	}
 }

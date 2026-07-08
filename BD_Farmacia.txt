@@ -720,6 +720,178 @@ END //
 
 DELIMITER ;
 
+-- creacion del procedure obtener detalle de venta ----------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE SP_OBTENER_DETALLE_VENTA(
+    IN p_idDetalle INT
+)
+BEGIN
+    SELECT
+        dv.cod AS id_detalle,
+        dv.cant,
+        dv.precio_unitario,
+
+        v.cod AS id_venta,
+        v.fecha,
+
+        u.id AS id_usuario,
+        u.nombre AS nombre_usuario,
+
+        p.id AS id_producto,
+        p.nombre AS nom_producto,
+        p.prin_act,
+        p.marca,
+        p.lab,
+        p.presentacion,
+        p.precio,
+        p.requiere_receta,
+        p.activo,
+
+        cat.id AS id_categoria,
+        cat.nombre AS nom_categoria,
+        cat.descripcion,
+
+        l.id AS id_lote,
+        l.numero_lote,
+        l.fecha_vencimiento,
+        l.stock_actual
+
+    FROM detalle_venta dv
+    INNER JOIN venta v
+        ON dv.id_venta = v.cod
+    INNER JOIN usuario u
+        ON v.id_usuario = u.id
+    INNER JOIN producto p
+        ON dv.id_producto = p.id
+    INNER JOIN categoria cat
+        ON p.id_categoria = cat.id
+    INNER JOIN lote l
+        ON dv.id_lote = l.id
+    WHERE dv.cod = p_idDetalle;
+END //
+
+DELIMITER ;
+
+-- creacion del procedure para obtener el total de la venta -------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE SP_TOTAL_VENTA(
+    IN p_idVenta INT
+)
+BEGIN
+    SELECT IFNULL(SUM(cant * precio_unitario), 0) AS total
+    FROM detalle_venta
+    WHERE id_venta = p_idVenta;
+END //
+
+DELIMITER ;
+
+-- #GUI Movimientos -----------------------------------------------------------------------------------------------------
+-- creacion del procedure compras recientes -----------------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE SP_MOVIMIENTOS_COMPRAS()
+BEGIN
+    SELECT
+        c.cod AS id_compra,
+        c.fecha,
+
+        (
+            SELECT IFNULL(SUM(dc2.cant * dc2.costo_uni), 0)
+            FROM detalle_compra dc2
+            WHERE dc2.id_compra = c.cod
+        ) AS total_compra,
+
+        dc.cod AS id_detalle,
+        dc.cant,
+        dc.costo_uni,
+        (dc.cant * dc.costo_uni) AS subtotal,
+
+        p.id AS id_producto,
+        p.nombre AS nombre_producto,
+        p.precio AS precio_actual,
+        p.marca,
+        p.lab,
+
+        cat.nombre AS nombre_categoria,
+
+        l.id AS id_lote,
+        l.numero_lote,
+        l.fecha_vencimiento,
+        l.stock_actual,
+
+        u.id AS id_usuario,
+        u.nombre AS nombre_usuario
+
+    FROM compra c
+    INNER JOIN detalle_compra dc
+        ON c.cod = dc.id_compra
+    INNER JOIN producto p
+        ON dc.id_producto = p.id
+    INNER JOIN categoria cat
+        ON p.id_categoria = cat.id
+    INNER JOIN lote l
+        ON dc.id_lote = l.id
+    INNER JOIN usuario u
+        ON c.id_usuario = u.id
+    ORDER BY c.cod DESC, dc.cod ASC;
+END //
+
+DELIMITER ;
+
+-- creacion del procedure ventas recientes ------------------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE SP_MOVIMIENTOS_VENTAS()
+BEGIN
+    SELECT
+        v.cod AS id_venta,
+        v.fecha,
+
+        (
+            SELECT IFNULL(SUM(dv2.cant * dv2.precio_unitario), 0)
+            FROM detalle_venta dv2
+            WHERE dv2.id_venta = v.cod
+        ) AS total_venta,
+
+        dv.cod AS id_detalle,
+        dv.cant,
+        dv.precio_unitario,
+        (dv.cant * dv.precio_unitario) AS subtotal,
+
+        p.id AS id_producto,
+        p.nombre AS nombre_producto,
+        p.precio AS precio_actual,
+        p.marca,
+        p.lab,
+
+        cat.nombre AS nombre_categoria,
+
+        l.id AS id_lote,
+        l.numero_lote,
+        l.fecha_vencimiento,
+        l.stock_actual,
+
+        u.id AS id_usuario,
+        u.nombre AS nombre_usuario
+
+    FROM venta v
+    INNER JOIN detalle_venta dv
+        ON v.cod = dv.id_venta
+    INNER JOIN producto p
+        ON dv.id_producto = p.id
+    INNER JOIN categoria cat
+        ON p.id_categoria = cat.id
+    INNER JOIN lote l
+        ON dv.id_lote = l.id
+    INNER JOIN usuario u
+        ON v.id_usuario = u.id
+    ORDER BY v.cod DESC, dv.cod ASC;
+END //
+
+DELIMITER ;
+
 -- #Listas predeterminadas ----------------------------------------------------------------------------------------------
 
 -- categorias
@@ -746,4 +918,4 @@ CALL SP_INSERTAR_PRODUCTO('Enalapril Infamed', 'Enalapril', 'Infamed', 'Corporac
 CALL SP_INSERTAR_PRODUCTO('Metformina IQB', 'Metformina', 'IQB', 'Laboratorios IQB', 'Caja con 30 tabletas de 850mg', 11.20, true, true, 10005);
 
 -- #Zona libre para usar scripts o calls de la DB ---------------------------------------------------------------------
-Call SP_LISTAR_DETALLE_VENTA();
+CALL SP_MOVIMIENTOS_VENTAS();

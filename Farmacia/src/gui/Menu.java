@@ -312,10 +312,10 @@ public class Menu extends JFrame implements ActionListener {
 	}
 	
 	protected void do_btnRegistro_actionPerformed(ActionEvent e) {
-		JOptionPane.showMessageDialog(this, 
-	            "En Desarrollo.", 
-	            "Acceso Restringido", 
-	            JOptionPane.WARNING_MESSAGE);
+		Movimientos ventanaMovimiento = new Movimientos();
+		ventanaMovimiento.setVisible(true);
+		
+		this.dispose();
 	}
 	
 	protected void do_btnInvent_actionPerformed(ActionEvent e) {

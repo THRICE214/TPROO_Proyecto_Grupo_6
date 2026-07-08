@@ -75,11 +75,9 @@ public class Compras extends JFrame implements ActionListener {
 	private JButton btnEliminarElemento;
 	private JButton btnTerminarCompra;
 	private JButton btnLimpiar;
-	private JButton btnLisAnu;
 	private JLabel lblComprando;
 	private JButton btnLisTodo;
 	private JScrollPane scrollPane;
-	private JButton btnAnularCompra;
 	private JTable tblCom;
 	private JButton btnBuscar;
 	private JComboBox cboBuscar;
@@ -456,13 +454,6 @@ public class Compras extends JFrame implements ActionListener {
 			contentPane.add(btnLimpiar);
 		}
 		{
-			btnLisAnu = new JButton("Listar Anulados");
-			btnLisAnu.addActionListener(this);
-			btnLisAnu.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			btnLisAnu.setBounds(1078, 664, 126, 23);
-			contentPane.add(btnLisAnu);
-		}
-		{
 			lblComprando = new JLabel("*Comprando...");
 			lblComprando.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblComprando.setBounds(99, 23, 110, 14);
@@ -472,7 +463,7 @@ public class Compras extends JFrame implements ActionListener {
 			btnLisTodo = new JButton("Listar Todo");
 			btnLisTodo.addActionListener(this);
 			btnLisTodo.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			btnLisTodo.setBounds(942, 664, 126, 23);
+			btnLisTodo.setBounds(1078, 664, 126, 23);
 			contentPane.add(btnLisTodo);
 		}
 		{
@@ -517,13 +508,6 @@ public class Compras extends JFrame implements ActionListener {
 					    }
 					});
 			}
-		}
-		{
-			btnAnularCompra = new JButton("Anular Compra Realizada");
-			btnAnularCompra.addActionListener(this);
-			btnAnularCompra.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			btnAnularCompra.setBounds(192, 698, 166, 23);
-			contentPane.add(btnAnularCompra);
 		}
 		{
 			btnBuscar = new JButton("Buscar");
@@ -715,10 +699,8 @@ public class Compras extends JFrame implements ActionListener {
 	    btnLimpiar.setEnabled(false);
 	    
 	    btnNueCom.setEnabled(true);
-	    btnAnularCompra.setEnabled(true);
 	    btnBuscar.setEnabled(true);
 	    btnLisTodo.setEnabled(true);
-	    btnLisAnu.setEnabled(true);
 	    btnRegresar.setEnabled(true);
 	    
 	    //campos
@@ -772,9 +754,7 @@ public class Compras extends JFrame implements ActionListener {
 	    
 	    btnNueCom.setEnabled(false);
 	    btnBuscar.setEnabled(false);
-	    btnAnularCompra.setEnabled(false);
 	    btnLisTodo.setEnabled(false);
-	    btnLisAnu.setEnabled(false);
 	    
 	    filtrarProductosEnCombo("");
 	}
@@ -850,12 +830,6 @@ public class Compras extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnLisAnu) {
-			do_btnLisAnu_actionPerformed(e);
-		}
-		if (e.getSource() == btnAnularCompra) {
-			do_btnAnularCompra_actionPerformed(e);
-		}
 		if (e.getSource() == btnBuscar) {
 			do_btnBuscar_actionPerformed(e);
 		}
@@ -1350,11 +1324,5 @@ public class Compras extends JFrame implements ActionListener {
 			          + "Use: AAAA-MM-DD");
 			}
 		}
-	}
-	protected void do_btnAnularCompra_actionPerformed(ActionEvent e) {
-		JOptionPane.showMessageDialog(this, "En Proceso...");
-	}
-	protected void do_btnLisAnu_actionPerformed(ActionEvent e) {
-		JOptionPane.showMessageDialog(this, "En Proceso...");
 	}
 }

@@ -124,6 +124,8 @@ public class Ventas extends JFrame implements ActionListener {
 		setTitle("Sección Ventas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1230, 772);
+		setResizable(false);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(204, 255, 204));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -533,6 +535,21 @@ public class Ventas extends JFrame implements ActionListener {
 							scrollPane.setViewportView(tblVen);
 							
 							configurarAnchoColumnas();
+							
+							tblVen.addMouseListener(new java.awt.event.MouseAdapter() {
+								@Override
+								public void mouseClicked(java.awt.event.MouseEvent e) {
+
+									if (!estadoVendiendo) {
+
+										int filaSeleccionada = tblVen.getSelectedRow();
+
+										if (filaSeleccionada != -1) {
+											pasarDatosDeTablaACampos(filaSeleccionada);
+										}
+									}
+								}
+							});
 			    	}
 			    }
 			    {
@@ -932,6 +949,9 @@ public class Ventas extends JFrame implements ActionListener {
 	}
 	
 	protected void do_btnNueVen_actionPerformed(ActionEvent e) {
+		cargarProductos();
+		cargarCategorias();
+		
 		// Preparar objeto venta
 	    ventaActual = new Venta();
 	    ventaActual.setDetVen(new ArrayList<DetalleVenta>());
@@ -1159,7 +1179,6 @@ public class Ventas extends JFrame implements ActionListener {
 			}
 		}
 		
-		
 		// 3. Actualizar total
 		actualizarTotalVenta();
 		
@@ -1193,6 +1212,8 @@ public class Ventas extends JFrame implements ActionListener {
 		
 		limpiarCampos();
 		estadoInicial();
+		
+		listarTodoEnTabla();
 	}
 	
 	protected void do_btnTerminarVenta_actionPerformed(ActionEvent e) {
@@ -1245,6 +1266,7 @@ public class Ventas extends JFrame implements ActionListener {
 
 			limpiarCampos();
 			estadoInicial();
+			listarTodoEnTabla();
 
 		} else {
 			JOptionPane.showMessageDialog(
@@ -1351,6 +1373,101 @@ public class Ventas extends JFrame implements ActionListener {
 						"Formato incorrecto.\nUse: AAAA-MM-DD"
 				);
 			}
+		}
+	}
+	
+	private boolean comboContiene(JComboBox combo, String texto) {
+
+		for (int i = 0; i < combo.getItemCount(); i++) {
+
+			Object item = combo.getItemAt(i);
+
+			if (item != null && item.toString().equals(texto)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
+	private void pasarDatosDeTablaACampos(int fila) {
+
+		try {
+
+			if (estadoVendiendo) {
+				return;
+			}
+
+			int filaModelo = tblVen.convertRowIndexToModel(fila);
+
+			Object valorIdDetalle = modeloTable.getValueAt(filaModelo, 9);
+
+			if (valorIdDetalle == null || valorIdDetalle.toString().trim().isEmpty()) {
+				return;
+			}
+
+			int idDetalle = Integer.parseInt(valorIdDetalle.toString());
+
+			DetalleVenta det = arrVenta.obtenerDetalleVenta(idDetalle);
+
+			if (det == null) {
+				return;
+			}
+
+			int idVenta = det.getVenta().getCod();
+			double totalVenta = arrVenta.obtenerTotalVenta(idVenta);
+
+			limpiandoCampos = true;
+
+			// VENTA
+			txtCodVen.setText(String.valueOf(idVenta));
+			txtFechaVen.setText(det.getVenta().getFecha().toString());
+			txtUsuario.setText(det.getVenta().getUsuario().getNombre());
+			txtCosTotVen.setText(String.format("%.2f", totalVenta));
+
+			// DETALLE
+			txtCodDV.setText(String.valueOf(det.getCod()));
+			txtCantDV.setText(String.valueOf(det.getCant()));
+			txtPreFecDV.setText(String.format("%.2f", det.getPrecioUni()));
+			txtSubTotDV.setText(String.format("%.2f", det.getSubTotal()));
+
+			// PRODUCTO
+			txtCodP.setText(String.valueOf(det.getPro().getId()));
+			txtPreP.setText(String.format("%.2f", det.getPro().getPrecio()));
+			txtPresP.setText(det.getPro().getPresentacion());
+
+			String nombreProducto = det.getPro().getNombre();
+
+			if (!comboContiene(cboNomP, nombreProducto)) {
+				cboNomP.addItem(nombreProducto);
+			}
+
+			cboNomP.setSelectedItem(nombreProducto);
+
+			String nombreCategoria = det.getPro().getCategoria().getNombre();
+
+			if (!comboContiene(cboCatP, nombreCategoria)) {
+				cboCatP.addItem(nombreCategoria);
+			}
+
+			cboCatP.setSelectedItem(nombreCategoria);
+
+			// LOTE
+			txtCodLote.setText(String.valueOf(det.getLote().getId()));
+			txtNroLote.setText(det.getLote().getNumeroLote());
+			txtFechaVenciLote.setText(
+					det.getLote()
+					   .getFechaVencimiento()
+					   .toString()
+					   .replace("-", "/")
+			);
+			txtStockActLote.setText(String.valueOf(det.getLote().getStockActual()));
+
+			limpiandoCampos = false;
+
+		} catch (Exception ex) {
+			limpiandoCampos = false;
+			ex.printStackTrace();
 		}
 	}
 }
