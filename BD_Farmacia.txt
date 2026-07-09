@@ -421,6 +421,51 @@ END//
 
 DELIMITER ;
 
+-- creacion del procedure actualizar precio producto -------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE SP_ACTUALIZAR_PRECIO_PRODUCTO_20(
+    IN p_id_producto INT
+)
+BEGIN
+    UPDATE producto
+    SET precio = (
+        SELECT ROUND(IFNULL(MAX(dc.costo_uni), 0) * 1.20, 2)
+        FROM detalle_compra dc
+        WHERE dc.id_producto = p_id_producto
+    )
+    WHERE id = p_id_producto;
+END //
+
+DELIMITER ;
+
+-- creacion del procedure editar producto info ------------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE SP_EDITAR_PRODUCTO_INFO(
+    IN p_id INT,
+    IN p_nombre VARCHAR(100),
+    IN p_prin_act VARCHAR(100),
+    IN p_marca VARCHAR(100),
+    IN p_lab VARCHAR(100),
+    IN p_presentacion VARCHAR(100),
+    IN p_requiere_receta BOOLEAN,
+    IN p_id_categoria INT
+)
+BEGIN
+    UPDATE producto
+    SET nombre = p_nombre,
+        prin_act = p_prin_act,
+        marca = p_marca,
+        lab = p_lab,
+        presentacion = p_presentacion,
+        requiere_receta = p_requiere_receta,
+        id_categoria = p_id_categoria
+    WHERE id = p_id;
+END //
+
+DELIMITER ;
+
 -- #COMPRA ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- creacion del procedure insertar compra ------------------------------------------------------------------------------
 CREATE PROCEDURE SP_INSERTAR_COMPRA(p_fecha DATE, p_id_usuario INT)

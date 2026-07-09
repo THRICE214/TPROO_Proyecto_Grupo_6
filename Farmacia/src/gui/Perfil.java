@@ -427,6 +427,47 @@ public class Perfil extends JFrame implements ActionListener, MouseListener {
 		}
 	}
 	
+	private boolean camposAgregarValidos() {
+
+	    if (txtNom.getText().trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "Ingrese el nombre del usuario.");
+	        txtNom.requestFocus();
+	        return false;
+	    }
+
+	    if (txtMail.getText().trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "Ingrese el email del usuario.");
+	        txtMail.requestFocus();
+	        return false;
+	    }
+
+	    if (txtPass.getText().trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "Ingrese la contraseña del usuario.");
+	        txtPass.requestFocus();
+	        return false;
+	    }
+
+	    if (txtDocumento.getText().trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "Ingrese el documento del usuario.");
+	        txtDocumento.requestFocus();
+	        return false;
+	    }
+
+	    if (txtDireccion.getText().trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "Ingrese la dirección del usuario.");
+	        txtDireccion.requestFocus();
+	        return false;
+	    }
+
+	    if (txtTelef.getText().trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "Ingrese el teléfono del usuario.");
+	        txtTelef.requestFocus();
+	        return false;
+	    }
+
+	    return true;
+	}
+	
 	protected void do_btnMod_actionPerformed(ActionEvent e) {
 		Usuario usu = new Usuario();
 
@@ -467,6 +508,10 @@ public class Perfil extends JFrame implements ActionListener, MouseListener {
 	}
 	
 	protected void do_btnAgr_actionPerformed(ActionEvent e) {
+		 if (!camposAgregarValidos()) {
+		        return;
+		    }
+		
 		Usuario usu = new Usuario();
 
 	    usu.setNombre(txtNom.getText());

@@ -1531,19 +1531,7 @@ public class Ventas extends JFrame implements ActionListener, MouseListener {
 			    + "\n"
 			    + "\n-Solo se puede adquirir una vez una cantidad de prodcutos por operacion, en caso de"
 			    + "\nquerer agregar mas unidades del producto, tiene que eliminar lo agregado"
-			    + "\ny volver a agregarlo con la cantidad correcta (revisar seccion debajo para eliminar)."
-			    + "\n"
-			    + "\n-En caso de querer eliminar un elemento de la venta primero seleccione el elemento"
-			    + "\nclickeando sobre este en la tabla, posteriormente presione el boton 'Eliminar Elemento'"
-			    + "\ny confirme la accion para poder retirarlo de la lista."
-			    + "\n"
-			    + "\n-Para confirmar y efectuar la venta completa presione el boton 'Terminar Venta', tras"
-			    + "\nesto la venta sera registrada en la base de datos asi como los lotes usados seran "
-			    + "\ndescontados, los cuales podran ser de la misma forma consultados en "
-			    + "\nla ventana 'Inventario' disponibe desde el 'Menu'."
-			    + "\n"
-			    + "\n-En cualquier momento de la venta puede cancelar la operacion por cualquier motivo"
-			    + "\npresionando el boton 'Cancelar Venta', tras esto retornara a la vista general.",
+			    + "\ny volver a agregarlo con la cantidad correcta (revisar seccion debajo para eliminar).",
 			    "Informacion.",
 			    JOptionPane.INFORMATION_MESSAGE
 			);

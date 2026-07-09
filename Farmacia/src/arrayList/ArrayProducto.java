@@ -1,6 +1,7 @@
 package arrayList;
 
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
@@ -252,5 +253,39 @@ public class ArrayProducto {
 	    }
 
 	    return lista;
+	}
+	
+	public int EditarProductoInfo(Producto pro) {
+
+		int filas = 0;
+
+		Connection cn = null;
+		CallableStatement cs = null;
+
+		try {
+			cn = ConexionMySQL.getConexion();
+
+			cs = cn.prepareCall("{CALL SP_EDITAR_PRODUCTO_INFO(?, ?, ?, ?, ?, ?, ?, ?)}");
+
+			cs.setInt(1, pro.getId());
+			cs.setString(2, pro.getNombre());
+			cs.setString(3, pro.getPrinAct());
+			cs.setString(4, pro.getMarca());
+			cs.setString(5, pro.getLab());
+			cs.setString(6, pro.getPresentacion());
+			cs.setBoolean(7, pro.isRequiereReceta());
+			cs.setInt(8, pro.getCategoria().getId());
+
+			filas = cs.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			filas = -1;
+		} finally {
+			try { if (cs != null) cs.close(); } catch (Exception e) {}
+			try { if (cn != null) cn.close(); } catch (Exception e) {}
+		}
+
+		return filas;
 	}
 }

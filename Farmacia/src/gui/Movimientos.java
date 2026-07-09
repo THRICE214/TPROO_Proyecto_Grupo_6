@@ -5,10 +5,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JScrollPane;
@@ -22,6 +24,8 @@ import arrayList.ArrayProducto;
 import arrayList.ArrayCategoria;
 import clase.Producto;
 import clase.Categoria;
+import clase.Exportador;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseListener;
@@ -340,6 +344,13 @@ public class Movimientos extends JFrame implements ActionListener, MouseListener
 			lblNewLabel_3.setBounds(267, 11, 23, 20);
 			contentPane.add(lblNewLabel_3);
 		}
+		{
+			btnNewButton = new JButton("Exportar a Excel");
+			btnNewButton.addActionListener(this);
+			btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
+			btnNewButton.setBounds(884, 620, 140, 23);
+			contentPane.add(btnNewButton);
+		}
 
 		cargarCombosBuscarPrincipales();
 		prepararVentana();
@@ -364,6 +375,7 @@ public class Movimientos extends JFrame implements ActionListener, MouseListener
 	private ArrayList<Producto> listaProductos = new ArrayList<Producto>();
 	private ArrayList<Categoria> listaCategorias = new ArrayList<Categoria>();
 	private JLabel lblNewLabel_3;
+	private JButton btnNewButton;
 	
 	private void prepararVentana() {
 
@@ -571,6 +583,9 @@ public class Movimientos extends JFrame implements ActionListener, MouseListener
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnNewButton) {
+			do_btnNewButton_actionPerformed(e);
+		}
 		if (e.getSource() == btnRegresar) {
 			do_btnRegresar_actionPerformed(e);
 		}
@@ -969,5 +984,26 @@ public class Movimientos extends JFrame implements ActionListener, MouseListener
 			    "Informacion.",
 			    JOptionPane.INFORMATION_MESSAGE
 			);
+	}
+	protected void do_btnNewButton_actionPerformed(ActionEvent e) {
+		JFileChooser seleccionador = new JFileChooser();
+		seleccionador.setDialogTitle("Guardar Reporte Excel de Movimientos");
+
+		// Filtramos para que solo muestre y guarde en formato Excel
+		FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos Excel (*.xlsx)", "xlsx");
+		seleccionador.setFileFilter(filtro);
+
+		int opcion = seleccionador.showSaveDialog(null);
+
+		if (opcion == JFileChooser.APPROVE_OPTION) {
+		    String ruta = seleccionador.getSelectedFile().getAbsolutePath();
+		    
+		    // Asegurarnos de que el archivo termine en .xlsx
+		    if (!ruta.endsWith(".xlsx")) {
+		        ruta += ".xlsx";
+		    }
+		    // Llamamos a nuestra clase Exportador, pasándole la tabla y la ruta
+		    Exportador.exportarKardexAExcel(tblCom, tblVen, ruta);
+		}
 	}
 }

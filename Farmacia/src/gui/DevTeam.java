@@ -28,6 +28,12 @@ public class DevTeam extends JFrame implements ActionListener {
 	private JLabel lblNewLabel_8;
 	private JLabel lblNewLabel_9;
 	private JButton btnNewButton;
+	private JLabel lblNewLabel_10;
+	private JLabel lblNewLabel_11;
+	private JLabel lblNewLabel_12;
+	private JLabel lblNewLabel_13;
+	private JLabel lblNewLabel_14;
+	private JLabel lblNewLabel_15;
 
 	/**
 	 * Launch the application.
@@ -51,7 +57,7 @@ public class DevTeam extends JFrame implements ActionListener {
 	public DevTeam() {
 		setTitle("DEV Team");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 809, 440);
+		setBounds(100, 100, 852, 440);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
@@ -155,15 +161,66 @@ public class DevTeam extends JFrame implements ActionListener {
 			contentPane.add(lblNewLabel_8);
 		}
 		{
-			lblNewLabel_9 = new JLabel("Alejandro");
-			lblNewLabel_9.setBounds(688, 145, 46, 14);
+			ImageIcon iconoNic = new ImageIcon(LogIn.class.getResource("/Recursos/Nicolas.png"));
+
+			Image imagenEscaladaNic = iconoNic.getImage().getScaledInstance(
+			    129,
+			    184,
+			    Image.SCALE_SMOOTH
+			);
+			
+			lblNewLabel_9 = new JLabel("Nicolas");
+			lblNewLabel_9.setIcon(new ImageIcon(imagenEscaladaNic));
+			lblNewLabel_9.setBounds(645, 60, 129, 184);
+
 			contentPane.add(lblNewLabel_9);
+
+			contentPane.setComponentZOrder(
+			    lblNewLabel_9,
+			    contentPane.getComponentCount() - 1
+			);
 		}
 		{
 			btnNewButton = new JButton("Regresar");
 			btnNewButton.addActionListener(this);
 			btnNewButton.setBounds(10, 367, 89, 23);
 			contentPane.add(btnNewButton);
+		}
+		{
+			lblNewLabel_10 = new JLabel("Alejan_garcia101@outlook.es");
+			lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_10.setBounds(640, 305, 143, 14);
+			contentPane.add(lblNewLabel_10);
+		}
+		{
+			lblNewLabel_11 = new JLabel("ambaramos667@gmail.com");
+			lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_11.setBounds(49, 305, 143, 14);
+			contentPane.add(lblNewLabel_11);
+		}
+		{
+			lblNewLabel_12 = new JLabel("avilchezgutierrez@gmail.com");
+			lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_12.setBounds(245, 305, 138, 14);
+			contentPane.add(lblNewLabel_12);
+		}
+		{
+			lblNewLabel_13 = new JLabel("nikolasandrefb@outlook.com");
+			lblNewLabel_13.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_13.setBounds(452, 305, 143, 14);
+			contentPane.add(lblNewLabel_13);
+		}
+		{
+			lblNewLabel_14 = new JLabel("Nicolas Alejandro");
+			lblNewLabel_14.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_14.setBounds(645, 265, 129, 14);
+			contentPane.add(lblNewLabel_14);
+		}
+		{
+			lblNewLabel_15 = new JLabel("Garcia Huallanca");
+			lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_15.setBounds(645, 284, 129, 14);
+			contentPane.add(lblNewLabel_15);
 		}
 
 	}

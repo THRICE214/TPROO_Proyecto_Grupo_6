@@ -50,7 +50,6 @@ public class Productos extends JFrame implements ActionListener, MouseListener {
 	private JTextField txtIdC;
 	private JTextArea txtDesC;
 	private JLabel lblNewLabel_8;
-	private JButton btnAgregarP;
 	private JButton btnBuscarP;
 	private JButton btnModificarP;
 	private JButton btnEliminarP;
@@ -180,13 +179,6 @@ public class Productos extends JFrame implements ActionListener, MouseListener {
 			contentPane.add(lblNewLabel_8);
 		}
 		{
-			btnAgregarP = new JButton("Agregar");
-			btnAgregarP.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			btnAgregarP.addActionListener(this);
-			btnAgregarP.setBounds(32, 487, 102, 23);
-			contentPane.add(btnAgregarP);
-		}
-		{
 			btnBuscarP = new JButton("Buscar");
 			btnBuscarP.addActionListener(this);
 			btnBuscarP.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -267,7 +259,7 @@ public class Productos extends JFrame implements ActionListener, MouseListener {
 			contentPane.add(lblNewLabel_12);
 		}
 		{
-			lblNewLabel_13 = new JLabel("Precio:");
+			lblNewLabel_13 = new JLabel("Precio Venta:");
 			lblNewLabel_13.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblNewLabel_13.setBounds(10, 317, 82, 14);
 			contentPane.add(lblNewLabel_13);
@@ -332,6 +324,8 @@ public class Productos extends JFrame implements ActionListener, MouseListener {
 		}
 		{
 			txtPreP = new JTextField();
+			txtPreP.setEditable(false);
+			txtPreP.setHorizontalAlignment(SwingConstants.RIGHT);
 			txtPreP.setColumns(10);
 			txtPreP.setBounds(114, 314, 199, 20);
 			contentPane.add(txtPreP);
@@ -461,7 +455,7 @@ public class Productos extends JFrame implements ActionListener, MouseListener {
 			btnListarP = new JButton("Listar");
 			btnListarP.addActionListener(this);
 			btnListarP.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			btnListarP.setBounds(194, 487, 102, 23);
+			btnListarP.setBounds(32, 487, 102, 23);
 			contentPane.add(btnListarP);
 		}
 		{
@@ -515,9 +509,6 @@ public class Productos extends JFrame implements ActionListener, MouseListener {
 		}
 		if (e.getSource() == btnAgregarC) {
 			do_btnAgregarC_actionPerformed(e);
-		}
-		if (e.getSource() == btnAgregarP) {
-			do_btnAgregarP_actionPerformed(e);
 		}
 	}
 	
@@ -659,12 +650,12 @@ public class Productos extends JFrame implements ActionListener, MouseListener {
 		txtMarcaP.setEnabled(p);
 		txtLabP.setEnabled(p);
 		txtPresP.setEnabled(p);
-		txtPreP.setEnabled(p);
+		txtPreP.setEnabled(true);
+		txtPreP.setEditable(false);
 		cboCategoria.setEnabled(p);
 		cboReqRec.setEnabled(p);
 		cboActP.setEnabled(p);
 		//botones producto
-		btnAgregarP.setEnabled(p);
 		btnListarP.setEnabled(p);
 		btnBuscarP.setEnabled(p);
 		btnModificarP.setEnabled(p);
@@ -714,88 +705,6 @@ public class Productos extends JFrame implements ActionListener, MouseListener {
 	                }
 	        );
 	    }
-	}
-	
-	protected void do_btnAgregarP_actionPerformed(ActionEvent e) { //agregar producto
-		if (btnAgregarP.getText().equals("Agregar")) {
-			habilitarComp(false);
-			//campos producto
-			txtNomP.setEnabled(true);
-			txtPrinActP.setEnabled(true);
-			txtMarcaP.setEnabled(true);
-			txtLabP.setEnabled(true);
-			txtPresP.setEnabled(true);
-			txtPreP.setEnabled(true);
-			cboCategoria.setEnabled(true);
-			cboReqRec.setEnabled(true);
-			cboActP.setEnabled(true);
-			btnAgregarP.setEnabled(true);
-			btnAgregarP.setText("Confirmar");
-		}
-		else {
-			Producto pro = new Producto();
-			
-			pro.setNombre(txtNomP.getText());
-			pro.setPrinAct(txtPrinActP.getText());
-			pro.setMarca(txtMarcaP.getText());
-			pro.setLab(txtLabP.getText());
-			pro.setPresentacion(txtPresP.getText());
-			pro.setPrecio(Double.parseDouble(txtPreP.getText()));
-			
-			//verificacion de categoria
-			if (cboCategoria.getItemCount() == 0) {
-			    JOptionPane.showMessageDialog(
-			        this,
-			        "No hay categorías registradas. Registre una categoría primero."
-			    );
-			    return;
-			}
-
-			if (cboCategoria.getSelectedIndex() == -1) {
-			    JOptionPane.showMessageDialog(
-			        this,
-			        "Seleccione una categoría."
-			    );
-			    return;
-			}
-			
-			//obtener categoria
-			String nombreCat =
-				    cboCategoria.getSelectedItem().toString();
-
-			Categoria cat = new ArrayCategoria().ConsultarCategoriaNombre(nombreCat);
-
-			pro.setCategoria(cat);
-			
-			//datos bolleanos
-			pro.setRequiereReceta(
-				    Boolean.parseBoolean(
-				        cboReqRec.getSelectedItem().toString()
-				    )
-			);
-
-			pro.setActivo(
-				    Boolean.parseBoolean(
-				        cboActP.getSelectedItem().toString()
-				    )
-			);
-			
-			int filas =
-				    new ArrayProducto()
-				        .AgregarProducto(pro);
-			
-			if(filas > 0) {
-			    JOptionPane.showMessageDialog(
-			        this,
-			        "Producto agregado correctamente."
-			    );
-			}
-			//
-			cargarProductoTabla();
-			habilitarComp(true);
-			btnAgregarP.setText("Agregar");
-			limpiarCampos();
-		}
 	}
 	
 	private void cargarCategoriaTabla() {
@@ -1089,9 +998,10 @@ public class Productos extends JFrame implements ActionListener, MouseListener {
 	        txtLabP.setEnabled(true);
 	        txtPresP.setEnabled(true);
 	        txtPreP.setEnabled(true);
+	        txtPreP.setEditable(false);
 	        cboCategoria.setEnabled(true);
 	        cboReqRec.setEnabled(true);
-	        cboActP.setEnabled(true);
+	        cboActP.setEnabled(false);
 	        
 	        btnModificarP.setEnabled(true);
 	        btnModificarP.setText("Confirmar");
@@ -1112,7 +1022,6 @@ public class Productos extends JFrame implements ActionListener, MouseListener {
 	        pro.setMarca(txtMarcaP.getText());
 	        pro.setLab(txtLabP.getText());
 	        pro.setPresentacion(txtPresP.getText());
-	        pro.setPrecio(Double.parseDouble(txtPreP.getText()));
 	        
 	        // Obtener objeto Categoría a través de su nombre seleccionado en el combo
 	        String nombreCat = cboCategoria.getSelectedItem().toString();
@@ -1121,10 +1030,9 @@ public class Productos extends JFrame implements ActionListener, MouseListener {
 	        
 	        // Datos booleanos desde los ComboBox
 	        pro.setRequiereReceta(Boolean.parseBoolean(cboReqRec.getSelectedItem().toString()));
-	        pro.setActivo(Boolean.parseBoolean(cboActP.getSelectedItem().toString()));
 	        
 	        // Ejecución en la base de datos
-	        int filas = new ArrayProducto().EditarProducto(pro);
+	        int filas = new ArrayProducto().EditarProductoInfo(pro);
 
 	        if (filas > 0) {
 	            JOptionPane.showMessageDialog(this, "Producto actualizado correctamente.");

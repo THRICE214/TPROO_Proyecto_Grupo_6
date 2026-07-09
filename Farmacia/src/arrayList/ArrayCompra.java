@@ -47,57 +47,263 @@ public class ArrayCompra {
 	}
 	
 	public boolean registrarCompraCompleta(Compra compra) {
-	    Connection cn = null;
-	    PreparedStatement psCompra = null, psLote = null, psDetalle = null;
-	    ResultSet rs = null;
+		Connection cn = null;
+		PreparedStatement psCompra = null;
+		ResultSet rs = null;
 
-	    try {
-	        cn = ConexionMySQL.getConexion();
-	        cn.setAutoCommit(false); // INICIO DE TRANSACCIÓN: Nada se guarda hasta el final
+		try {
+			cn = ConexionMySQL.getConexion();
+			cn.setAutoCommit(false);
 
-	        // 1. Insertar Cabecera de Compra
-	        String sqlCompra = "INSERT INTO compra (fecha, estado, id_usuario) VALUES (?, ?, ?)";
-	        psCompra = cn.prepareStatement(sqlCompra, PreparedStatement.RETURN_GENERATED_KEYS);
-	        psCompra.setDate(1, java.sql.Date.valueOf(compra.getFecha()));
-	        psCompra.setBoolean(2, true);
-	        psCompra.setInt(3, SesionUsuario.getInstancia().getUsuarioLogueado().getId());
-	        psCompra.executeUpdate();
+			// 1. Insertar cabecera de compra
+			String sqlCompra =
+					"INSERT INTO compra (fecha, estado, id_usuario) VALUES (?, ?, ?)";
 
-	        rs = psCompra.getGeneratedKeys();
-	        int idCompra = rs.next() ? rs.getInt(1) : 0;
+			psCompra = cn.prepareStatement(
+					sqlCompra,
+					Statement.RETURN_GENERATED_KEYS
+			);
 
-	        // 2. Insertar Lotes y Detalles
-	        for (DetalleCompra dc : compra.getDetCom()) {
-	            // A. Insertar Lote
-	            String sqlLote = "INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto) VALUES (?, ?, ?, ?)";
-	            psLote = cn.prepareStatement(sqlLote, PreparedStatement.RETURN_GENERATED_KEYS);
-	            psLote.setString(1, dc.getLote().getNumeroLote());
-	            psLote.setDate(2, java.sql.Date.valueOf(dc.getLote().getFechaVencimiento()));
-	            psLote.setInt(3, dc.getLote().getStockActual());
-	            psLote.setInt(4, dc.getPro().getId());
-	            psLote.executeUpdate();
+			psCompra.setDate(1, java.sql.Date.valueOf(compra.getFecha()));
+			psCompra.setBoolean(2, true);
+			psCompra.setInt(
+					3,
+					SesionUsuario.getInstancia()
+							.getUsuarioLogueado()
+							.getId()
+			);
 
-	            ResultSet rsLote = psLote.getGeneratedKeys();
-	            int idLote = rsLote.next() ? rsLote.getInt(1) : 0;
+			psCompra.executeUpdate();
 
-	            // B. Insertar Detalle
-	            String sqlDetalle = "INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote) VALUES (?, ?, ?, ?, ?)";
-	            psDetalle = cn.prepareStatement(sqlDetalle);
-	            psDetalle.setInt(1, dc.getCant());
-	            psDetalle.setDouble(2, dc.getCostoUni());
-	            psDetalle.setInt(3, idCompra);
-	            psDetalle.setInt(4, dc.getPro().getId());
-	            psDetalle.setInt(5, idLote);
-	            psDetalle.executeUpdate();
-	        }
+			rs = psCompra.getGeneratedKeys();
 
-	        cn.commit(); // ÉXITO: Guardamos todo
-	        return true;
+			int idCompra = 0;
 
-	    } catch (Exception e) {
-	        try { if (cn != null) cn.rollback(); } catch (Exception ex) { ex.printStackTrace(); }
-	        e.printStackTrace();
-	        return false;
-	    }
+			if (rs.next()) {
+				idCompra = rs.getInt(1);
+			}
+
+			if (idCompra == 0) {
+				throw new Exception("No se pudo obtener el ID de la compra.");
+			}
+
+			// 2. Insertar detalles, lotes, productos/categorías nuevas
+			for (DetalleCompra dc : compra.getDetCom()) {
+
+				// A. Si la categoría es nueva, registrarla primero
+				if (dc.getPro().getCategoria().getId() == 0) {
+					int idCategoriaNueva =
+							insertarCategoriaYRetornarId(
+									cn,
+									dc.getPro().getCategoria()
+							);
+
+					dc.getPro()
+					  .getCategoria()
+					  .setId(idCategoriaNueva);
+				}
+
+				// B. Si el producto es nuevo, registrarlo antes del lote
+				if (dc.getPro().getId() == 0) {
+					int idProductoNuevo =
+							insertarProductoYRetornarId(
+									cn,
+									dc.getPro()
+							);
+
+					dc.getPro().setId(idProductoNuevo);
+				}
+
+				// C. Insertar lote
+				int idLote =
+						insertarLoteYRetornarId(
+								cn,
+								dc
+						);
+
+				dc.getLote().setId(idLote);
+
+				// D. Insertar detalle de compra
+				insertarDetalleCompra(
+						cn,
+						dc,
+						idCompra,
+						idLote
+				);
+
+				// E. Actualizar precio de venta del producto
+				actualizarPrecioProducto20(
+						cn,
+						dc.getPro().getId()
+				);
+			}
+
+			cn.commit();
+			return true;
+
+		} catch (Exception e) {
+			try {
+				if (cn != null) {
+					cn.rollback();
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			e.printStackTrace();
+			return false;
+
+		} finally {
+			try {
+				if (rs != null) rs.close();
+			} catch (Exception e) {}
+
+			try {
+				if (psCompra != null) psCompra.close();
+			} catch (Exception e) {}
+
+			try {
+				if (cn != null) cn.close();
+			} catch (Exception e) {}
+		}
+	}
+	
+	private int insertarCategoriaYRetornarId(
+			Connection cn,
+			clase.Categoria categoria
+	) throws Exception {
+
+		String sql =
+				"INSERT INTO categoria (nombre, descripcion) VALUES (?, ?)";
+
+		try (PreparedStatement ps = cn.prepareStatement(
+				sql,
+				Statement.RETURN_GENERATED_KEYS
+		)) {
+			ps.setString(1, categoria.getNombre());
+			ps.setString(2, categoria.getDescripcion());
+
+			ps.executeUpdate();
+
+			try (ResultSet rs = ps.getGeneratedKeys()) {
+				if (rs.next()) {
+					return rs.getInt(1);
+				}
+			}
+		}
+
+		throw new Exception("No se pudo obtener el ID de la categoría nueva.");
+	}
+	
+	private int insertarProductoYRetornarId(
+			Connection cn,
+			clase.Producto producto
+	) throws Exception {
+
+		String sql =
+				"INSERT INTO producto " +
+				"(nombre, prin_act, marca, lab, presentacion, precio, requiere_receta, activo, id_categoria) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+		try (PreparedStatement ps = cn.prepareStatement(
+				sql,
+				Statement.RETURN_GENERATED_KEYS
+		)) {
+			ps.setString(1, producto.getNombre());
+			ps.setString(2, producto.getPrinAct());
+			ps.setString(3, producto.getMarca());
+			ps.setString(4, producto.getLab());
+			ps.setString(5, producto.getPresentacion());
+
+			// Precio temporal. Luego se actualiza con el costo del lote + 20%.
+			ps.setDouble(6, 0);
+
+			ps.setBoolean(7, producto.isRequiereReceta());
+			ps.setBoolean(8, producto.isActivo());
+			ps.setInt(9, producto.getCategoria().getId());
+
+			ps.executeUpdate();
+
+			try (ResultSet rs = ps.getGeneratedKeys()) {
+				if (rs.next()) {
+					return rs.getInt(1);
+				}
+			}
+		}
+
+		throw new Exception("No se pudo obtener el ID del producto nuevo.");
+	}
+	
+	private int insertarLoteYRetornarId(
+			Connection cn,
+			DetalleCompra dc
+	) throws Exception {
+
+		String sql =
+				"INSERT INTO lote " +
+				"(numero_lote, fecha_vencimiento, stock_actual, id_producto) " +
+				"VALUES (?, ?, ?, ?)";
+
+		try (PreparedStatement ps = cn.prepareStatement(
+				sql,
+				Statement.RETURN_GENERATED_KEYS
+		)) {
+			ps.setString(1, dc.getLote().getNumeroLote());
+			ps.setDate(
+					2,
+					java.sql.Date.valueOf(
+							dc.getLote().getFechaVencimiento()
+					)
+			);
+			ps.setInt(3, dc.getLote().getStockActual());
+			ps.setInt(4, dc.getPro().getId());
+
+			ps.executeUpdate();
+
+			try (ResultSet rs = ps.getGeneratedKeys()) {
+				if (rs.next()) {
+					return rs.getInt(1);
+				}
+			}
+		}
+
+		throw new Exception("No se pudo obtener el ID del lote.");
+	}
+	
+	private void insertarDetalleCompra(
+			Connection cn,
+			DetalleCompra dc,
+			int idCompra,
+			int idLote
+	) throws Exception {
+
+		String sql =
+				"INSERT INTO detalle_compra " +
+				"(cant, costo_uni, id_compra, id_producto, id_lote) " +
+				"VALUES (?, ?, ?, ?, ?)";
+
+		try (PreparedStatement ps = cn.prepareStatement(sql)) {
+			ps.setInt(1, dc.getCant());
+			ps.setDouble(2, dc.getCostoUni());
+			ps.setInt(3, idCompra);
+			ps.setInt(4, dc.getPro().getId());
+			ps.setInt(5, idLote);
+
+			ps.executeUpdate();
+		}
+	}
+	
+	private void actualizarPrecioProducto20(
+			Connection cn,
+			int idProducto
+	) throws Exception {
+
+		String sql =
+				"CALL SP_ACTUALIZAR_PRECIO_PRODUCTO_20(?)";
+
+		try (PreparedStatement ps = cn.prepareStatement(sql)) {
+			ps.setInt(1, idProducto);
+			ps.executeUpdate();
+		}
 	}
 }

@@ -27,6 +27,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import clase.Producto;
+import clase.Categoria;
 
 public class Compras extends JFrame implements ActionListener, MouseListener {
 
@@ -545,6 +547,13 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 			lblNewLabel_20.setBounds(0, 0, 23, 20);
 			contentPane.add(lblNewLabel_20);
 		}
+		{
+			btnAgrePro = new JButton("Nuevo Producto");
+			btnAgrePro.addActionListener(this);
+			btnAgrePro.setFont(new Font("Tahoma", Font.PLAIN, 11));
+			btnAgrePro.setBounds(237, 261, 111, 23);
+			contentPane.add(btnAgrePro);
+		}
 		
 		//funciones al inicializar
 		configurarEventosCalculo();
@@ -558,6 +567,7 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	private clase.Compra compraActual;
 	private boolean estadoComprando = false;
 	private JLabel lblNewLabel_20;
+	private JButton btnAgrePro;
 	
 	private void configurarAnchoColumnas() {
 	    tblCom.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -678,6 +688,7 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	// ◄--- AQUÍ: CAMPOS BLOQUEADOS POR DEFECTO AL ABRIR LA VENTANA
 	private void estadoInicial() {
 		this.estadoComprando = false;
+		productoSeleccionadoTemporal = null;
 		
 	    lblComprando.setVisible(false);
 	    
@@ -708,6 +719,7 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	    btnTerminarCompra.setEnabled(false);
 	    btnCancelar.setEnabled(false);
 	    btnLimpiar.setEnabled(false);
+	    btnAgrePro.setEnabled(false);
 	    
 	    btnNueCom.setEnabled(true);
 	    btnBuscar.setEnabled(true);
@@ -744,6 +756,8 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	private void estadoComprando() {
 		this.estadoComprando = true;
 		
+		productoSeleccionadoTemporal = null;
+		
 	    lblComprando.setVisible(true);
 	    
 	    // Los campos de datos del producto se quedan congelados en setEditable(false)
@@ -753,12 +767,14 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	    txtFechaVenciLote.setEditable(true); // El usuario escribe el vencimiento del lote
 	    
 	    cboNomP.setEnabled(true);
+	    cboNomP.setEditable(true);
 	    
 	    btnAgreCom.setEnabled(true);
 	    btnEliminarElemento.setEnabled(true);
 	    btnTerminarCompra.setEnabled(true);
 	    btnCancelar.setEnabled(true);
 	    btnLimpiar.setEnabled(true);
+	    btnAgrePro.setEnabled(true);
 	    
 	    cboBuscar.setEnabled(false);
 	    txtBuscar.setEnabled(false);
@@ -841,6 +857,9 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnAgrePro) {
+			do_btnAgrePro_actionPerformed(e);
+		}
 		if (e.getSource() == btnBuscar) {
 			do_btnBuscar_actionPerformed(e);
 		}
@@ -993,8 +1012,10 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	    txtFechaVenciLote.setText(""); // El JFormattedTextField regresará a "__/__/__"
 	    
 	    if (cboNomP.getItemCount() > 0) {
-	        cboNomP.setSelectedIndex(0);
+	        cboNomP.setSelectedIndex(-1);
 	    }
+	    
+	    productoSeleccionadoTemporal = null;
 	}
 	
 	protected void do_btnLimpiar_actionPerformed(ActionEvent e) {
@@ -1024,6 +1045,30 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	        javax.swing.JOptionPane.showMessageDialog(this, "La fecha de vencimiento está incompleta.");
 	        return false;
 	    }
+	    
+	    //validacion de fecha no anterior a la actual
+	    try {
+	        LocalDate fechaVencimiento =
+	                LocalDate.parse(txtFechaVenciLote.getText().replace("/", "-"));
+
+	        LocalDate fechaActual =
+	                LocalDate.now();
+
+	        if (fechaVencimiento.isBefore(fechaActual)) {
+	            JOptionPane.showMessageDialog(
+	                    this,
+	                    "La fecha de vencimiento no puede ser anterior a la fecha actual."
+	            );
+	            return false;
+	        }
+
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(
+	                this,
+	                "La fecha de vencimiento no tiene un formato válido."
+	        );
+	        return false;
+	    }
 
 	    // 4. Validar que la cantidad sea mayor a cero
 	    try {
@@ -1036,6 +1081,19 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	        javax.swing.JOptionPane.showMessageDialog(this, "La cantidad debe ser un número entero.");
 	        return false;
 	    }
+	    
+	    try {
+	        double costo = Double.parseDouble(txtPreUniDC.getText().trim());
+
+	        if (costo <= 0) {
+	            JOptionPane.showMessageDialog(this, "El precio por unidad debe ser mayor a 0.");
+	            return false;
+	        }
+
+	    } catch (NumberFormatException e) {
+	        JOptionPane.showMessageDialog(this, "El precio por unidad debe ser un número válido.");
+	        return false;
+	    }
 
 	    return true; // Si pasa todo esto, el formulario es seguro
 	}
@@ -1046,12 +1104,23 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	    int indiceFila = -1;
 
 	    for (int i = 0; i < compraActual.getDetCom().size(); i++) {
-	        clase.DetalleCompra d = compraActual.getDetCom().get(i);
-	        if (d.getPro().getId() == nuevoDetalle.getPro().getId()) {
-	            detalleExistente = d;
-	            indiceFila = i;
-	            break;
-	        }
+	    	clase.DetalleCompra d = compraActual.getDetCom().get(i);
+
+	    	boolean mismoProducto = false;
+
+	    	if (d.getPro().getId() != 0 && nuevoDetalle.getPro().getId() != 0) {
+	    		mismoProducto = d.getPro().getId() == nuevoDetalle.getPro().getId();
+	    	} else {
+	    		mismoProducto = d.getPro().getNombre().equalsIgnoreCase(
+	    				nuevoDetalle.getPro().getNombre()
+	    		);
+	    	}
+
+	    	if (mismoProducto) {
+	    		detalleExistente = d;
+	    		indiceFila = i;
+	    		break;
+	    	}
 	    }
 
 	    if (detalleExistente != null) {
@@ -1066,6 +1135,7 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	            // A) SUMAR CANTIDAD
 	            int nuevaCantidad = detalleExistente.getCant() + nuevoDetalle.getCant();
 	            detalleExistente.setCant(nuevaCantidad);
+	            detalleExistente.getLote().setStockActual(nuevaCantidad);
 	            
 	            modeloTable.setValueAt(nuevaCantidad, indiceFila, 5); // Fila 5: Cantidad
 	            modeloTable.setValueAt(String.format("%.2f", detalleExistente.getSubTotal()), indiceFila, 7); // Fila 7: Subtotal
@@ -1075,18 +1145,20 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 	            javax.swing.JOptionPane.showMessageDialog(this, "Operación cancelada.");
 	        }
 	    } else {
-	        // AGREGAR NUEVO (Sin preguntar)
+	    	// AGREGAR NUEVO (Sin preguntar)
 	        compraActual.getDetCom().add(nuevoDetalle);
+
 	        modeloTable.addRow(new Object[] {
 	            "Pendiente", 
 	            txtFechaCom.getText(), 
 	            txtUsuarioCom.getText(),
-	            nuevoDetalle.getPro().getId(), 
+	            nuevoDetalle.getPro().getId() == 0 ? "Pendiente" : nuevoDetalle.getPro().getId(),
 	            nuevoDetalle.getPro().getNombre(),
 	            nuevoDetalle.getCant(), 
 	            nuevoDetalle.getCostoUni(),
 	            String.format("%.2f", nuevoDetalle.getSubTotal()),
-	            nuevoDetalle.getLote().getNumeroLote()
+	            nuevoDetalle.getLote().getNumeroLote(),
+	            "Pendiente"
 	        });
 	    }
 	}
@@ -1136,11 +1208,21 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 
 	// Método pequeño para no limpiar todo, solo lo del detalle
 	private void limpiarCamposDetalle() {
-	    txtCantDC.setText("");
-	    txtPreUniDC.setText("");
-	    txtSubTotDC.setText("");
-	    txtNroLote.setText("");
-	    txtFechaVenciLote.setText("");
+		 txtCantDC.setText("");
+		 txtPreUniDC.setText("");
+		 txtSubTotDC.setText("");
+		 txtNroLote.setText("");
+		 txtFechaVenciLote.setText("");
+
+		 txtCodP.setText("");
+		 txtCatP.setText("");
+		 txtPresP.setText("");
+
+		 productoSeleccionadoTemporal = null;
+
+		 if (cboNomP.getItemCount() > 0) {
+			 cboNomP.setSelectedIndex(-1);
+		 }
 	}
 	
 	protected void do_btnTerminarCompra_actionPerformed(ActionEvent e) {
@@ -1375,25 +1457,57 @@ public class Compras extends JFrame implements ActionListener, MouseListener {
 			    + "\n"
 			    + "\n-En este estado tambien se habilitara el ingreso de los campos necesarios para agregar"
 			    + "\nun elemento a la compra, asi como los productos registrados se rellenaran en el"
-			    + "\ndesplegable 'Nombre de Productos', tras esto puede agregar este elemento a la compra"
-			    + "\npresionando sobre el boton 'Agregar a la Compra'"
-			    + "\n"
-			    + "\n-Solo se puede adquirir una vez una cantidad de prodcutos por operacion, en caso de"
-			    + "\nquerer agregar mas unidades del producto a este lote, tiene que eliminar lo agregado"
-			    + "\ny volver a agregarlo con la cantidad correcta (revisar seccion debajo para eliminar)."
-			    + "\n"
-			    + "\n-En caso de querer eliminar un elemento de la compra primero seleccione el elemento"
-			    + "\nclickeando sobre este en la tabla, posteriormente presione el boton 'Eliminar Elemento'"
-			    + "\ny confirme la accion para poder retirarlo de la lista."
-			    + "\n"
-			    + "\n-Para confirmar y efectuar la compra completa presione el boton 'Terminar Compra', tras"
-			    + "\nesto la compra sera registrada en la base de datos asi como los lotes, los cuales"
-			    + "\npodran ser de la misma forma consultados en la ventana 'Inventario' disponibe desde el 'Menu'."
-			    + "\n"
-			    + "\n-En cualquier momento de la compra puede cancelar la operacion por cualquier motivo"
-			    + "\npresionando el boton 'Cancelar Compra', tras esto retornara a la vista general.",
+			    + "\ndesplegable 'Nombre de Productos', tras esto puede agregar este elemento a la compra",
 			    "Informacion.",
 			    JOptionPane.INFORMATION_MESSAGE
 			);
+	}
+	
+	protected void do_btnAgrePro_actionPerformed(ActionEvent e) {
+
+		if (!estadoComprando) {
+			JOptionPane.showMessageDialog(
+					this,
+					"Primero inicie una nueva compra."
+			);
+			return;
+		}
+
+		AgregarProducto ventana = new AgregarProducto(this);
+		ventana.setVisible(true);
+
+		Producto productoCreado = ventana.getProductoCreado();
+
+		if (productoCreado == null) {
+			return;
+		}
+
+		productoSeleccionadoTemporal = productoCreado;
+
+		txtCodP.setText("Pendiente");
+
+		cboNomP.removeAllItems();
+		cboNomP.addItem(productoCreado.getNombre());
+		cboNomP.setSelectedItem(productoCreado.getNombre());
+
+		txtCatP.setText(productoCreado.getCategoria().getNombre());
+		txtPresP.setText(productoCreado.getPresentacion());
+
+		java.time.LocalDateTime ahora = java.time.LocalDateTime.now();
+
+		String loteSugerido =
+				"LOT-" +
+				ahora.format(
+						java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
+				) +
+				"-NUEVO";
+
+		txtNroLote.setText(loteSugerido);
+
+		JOptionPane.showMessageDialog(
+				this,
+				"Producto agregado temporalmente.\n" +
+				"Se registrará en la base de datos al terminar la compra."
+		);
 	}
 }
