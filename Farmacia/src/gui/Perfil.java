@@ -27,8 +27,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
+import java.awt.event.MouseListener;
 
-public class Perfil extends JFrame implements ActionListener {
+public class Perfil extends JFrame implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -297,6 +299,14 @@ public class Perfil extends JFrame implements ActionListener {
 			contentPane.add(txtBuscar);
 			txtBuscar.setColumns(10);
 		}
+		{
+			lblNewLabel_9 = new JLabel("i");
+			lblNewLabel_9.addMouseListener(this);
+			lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_9.setFont(new Font("Times New Roman", Font.BOLD, 16));
+			lblNewLabel_9.setBounds(0, 0, 23, 20);
+			contentPane.add(lblNewLabel_9);
+		}
 		
 		cargarUsuariosTabla();
 	}
@@ -312,6 +322,7 @@ public class Perfil extends JFrame implements ActionListener {
 	//variable global
 	private int idSeleccionado;
 	private String documentoSeleccionado;
+	private JLabel lblNewLabel_9;
 	
 	//funcion para listar de la DB
 	private void cargarUsuariosTabla() {
@@ -572,5 +583,47 @@ public class Perfil extends JFrame implements ActionListener {
 	    ventanaMenu.setVisible(true);
 	    
 	    this.dispose();
+	}
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == lblNewLabel_9) {
+			do_lblNewLabel_9_mouseClicked(e);
+		}
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	protected void do_lblNewLabel_9_mouseClicked(MouseEvent e) {
+		JOptionPane.showMessageDialog(
+			    this,
+			    "En esta seccion solo los administradores podran gestionar a los usuarios."
+			    + "\n"
+			    + "\n-Puedes tomar los datos de un usuario y pasarlos a los campos clickeando"
+			    + "\na este usuario desde la tabla, esto tambien lo seleccionara para poder"
+			    + "\nrealizar otras funciones."
+			    + "\n"
+			    + "\n-Para agregar a un usuario rellene los campos correctamente y presione"
+			    + "\nel boton 'Agregar' para registrarlo."
+			    + "\n"
+			    + "\n-Tras seleccionar un usuario clickeandolo en la tabla el boton 'Modificar'"
+			    + "\nte permite cambiar sus datos y hasta poder cambiar su estado de habilitado"
+			    + "\no administrador."
+			    + "\n"
+			    + "\n-El boton 'Buscar por Doc.' permite poder buscar un usuario por su"
+			    + "\ndocumento, que debe ser ingresado en el campo de texto al lado del boton."
+			    + "\n"
+			    + "\n-El boton 'Mostrar Lista' permite mostrar nuevamente "
+			    + "\na todos los usuarios tras una busqueda por documento."
+			    + "\n"
+			    + "\n-En caso de solo querer rapidamente deshabilitar a un usuario puede hacerlo"
+			    + "\ntras seleccionarlo clickeandolo en la tabla y posteriormente presionando"
+			    + "\nel boton 'Deshabilitar' sin revisar otros datos.",
+			    "Informacion.",
+			    JOptionPane.INFORMATION_MESSAGE
+			);
 	}
 }

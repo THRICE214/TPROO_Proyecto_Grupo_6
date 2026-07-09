@@ -174,14 +174,19 @@ public class LogIn extends JFrame implements ActionListener, MouseListener {
 	}
 	public void mouseReleased(MouseEvent e) {
 	}
+	
 	protected void do_lblNewLabel_3_mouseClicked(MouseEvent e) {
 		JOptionPane.showMessageDialog(
 			    this,
-			    "Mensaje de informacion.",
-			    "Información",
+			    "Escriba correctamente su correo y contraseña."
+			    + "\nEn caso de no poder iniciar sesion solicitar ayuda del administrador."
+			    + "\nSi el administrador tiene problemas para ingresar comunicarse con el"
+			    + "\ndesarrollador para que pueda verificar y resolver los incidentes.",
+			    "Informacion.",
 			    JOptionPane.INFORMATION_MESSAGE
 			);
 	}
+	
 	protected void do_btnIngresar_actionPerformed(ActionEvent e) {
 		String correoIngresado = txtUsuario.getText().trim();
 		String contraseniaIngresada = new String(txtContra.getPassword());

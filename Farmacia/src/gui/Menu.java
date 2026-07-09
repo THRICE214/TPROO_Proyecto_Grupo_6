@@ -18,8 +18,11 @@ import clase.SesionUsuario;
 import clase.Usuario;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class Menu extends JFrame implements ActionListener {
+public class Menu extends JFrame implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -38,6 +41,8 @@ public class Menu extends JFrame implements ActionListener {
 	private JLabel lblNewLabel_5;
 	private JButton btnInvent;
 	private JLabel lblNewLabel_6;
+	private JLabel lblNewLabel_7;
+	private JLabel lblNewLabel_8;
 
 	/**
 	 * Launch the application.
@@ -71,6 +76,22 @@ public class Menu extends JFrame implements ActionListener {
 		{
 			btnInvent = new JButton("Inventario");
 			btnInvent.addActionListener(this);
+			{
+				lblNewLabel_7 = new JLabel("i");
+				lblNewLabel_7.addMouseListener(this);
+				{
+					lblNewLabel_8 = new JLabel("equipo desarrollador");
+					lblNewLabel_8.addMouseListener(this);
+					lblNewLabel_8.setHorizontalAlignment(SwingConstants.CENTER);
+					lblNewLabel_8.setFont(new Font("Tahoma", Font.PLAIN, 11));
+					lblNewLabel_8.setBounds(322, 476, 112, 20);
+					contentPane.add(lblNewLabel_8);
+				}
+				lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
+				lblNewLabel_7.setFont(new Font("Times New Roman", Font.BOLD, 16));
+				lblNewLabel_7.setBounds(411, 0, 23, 20);
+				contentPane.add(lblNewLabel_7);
+			}
 			btnInvent.setBounds(161, 421, 105, 23);
 			contentPane.add(btnInvent);
 		}
@@ -155,7 +176,7 @@ public class Menu extends JFrame implements ActionListener {
 			btnAdministrador = new JButton("Administrar Usuarios");
 			btnAdministrador.addActionListener(this);
 			btnAdministrador.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			btnAdministrador.setBounds(287, 16, 137, 23);
+			btnAdministrador.setBounds(270, 16, 137, 23);
 			contentPane.add(btnAdministrador);
 		}
 		{
@@ -321,6 +342,60 @@ public class Menu extends JFrame implements ActionListener {
 	protected void do_btnInvent_actionPerformed(ActionEvent e) {
 		Inventario ventanaInventario = new Inventario();
 	    ventanaInventario.setVisible(true);
+	    
+	    this.dispose();
+	}
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == lblNewLabel_8) {
+			do_lblNewLabel_8_mouseClicked(e);
+		}
+		if (e.getSource() == lblNewLabel_7) {
+			do_lblNewLabel_7_mouseClicked(e);
+		}
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	
+	protected void do_lblNewLabel_7_mouseClicked(MouseEvent e) {
+		JOptionPane.showMessageDialog(
+			    this,
+			    "-Solo el administrador puede ingresar a 'Administrar usuarios' y gestionar"
+			    + "\nlos perfiles, informacion y cuentas, asi como registrar nuevos usuarios."
+			    + "\n"
+			    + "\n-La seccion 'Compras' permite al usuario registrar el ingreso de productos"
+			    + "\npor lotes, pero primero se tendra que registrar los productos a ingresar"
+			    + "\nen la seccion 'productos' en caso de no estar registrados."
+			    + "\n"
+			    + "\n-La seccion 'Ventas' permite al usuario realizar una operacion de venta"
+			    + "\ny registrarla a la vez, descontando los lotes, pero antes de poder realizar"
+			    + "\nla venta debera haberse registrado el producto y tener lotes disponibles"
+			    + "\n(los lotes se registran automaticamente al 'comprar')."
+			    + "\n"
+			    + "\n-La seccion de 'Productos' permite al usuario registrar los productos y sus"
+			    + "\ncategorias correspondientes, tras esto podran ser seleccionados para realizar"
+			    + "\ncompras y ventas en sus secciones correspondientes."
+			    + "\n"
+			    + "\n-La seccion 'Registro' permite visualizar y ordenar las compras y ventas por"
+			    + "\nvarios filtros como fecha, producto, usuario... para tener un mejor control"
+			    + "\nde la informacion de transacciones y poder contabilizarlo facilmente."
+			    + "\n"
+			    + "\n-La seccion 'Inventario' permite poder visualizar los lotes disponibles de"
+			    + "\nde forma ordenada y poder filtrarlos por datos necesarios como fecha de"
+			    + "\nadquisicion, producto, etc.",
+			    "Informacion.",
+			    JOptionPane.INFORMATION_MESSAGE
+			);
+	}
+	
+	protected void do_lblNewLabel_8_mouseClicked(MouseEvent e) {
+		DevTeam ventanaDevTeam = new DevTeam();
+	    ventanaDevTeam.setVisible(true);
 	    
 	    this.dispose();
 	}

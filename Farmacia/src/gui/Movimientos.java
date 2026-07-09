@@ -24,8 +24,10 @@ import clase.Producto;
 import clase.Categoria;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class Movimientos extends JFrame implements ActionListener {
+public class Movimientos extends JFrame implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -330,6 +332,14 @@ public class Movimientos extends JFrame implements ActionListener {
 			txtCosTotV.setBounds(387, 587, 86, 20);
 			contentPane.add(txtCosTotV);
 		}
+		{
+			lblNewLabel_3 = new JLabel("i");
+			lblNewLabel_3.addMouseListener(this);
+			lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_3.setFont(new Font("Times New Roman", Font.BOLD, 16));
+			lblNewLabel_3.setBounds(267, 11, 23, 20);
+			contentPane.add(lblNewLabel_3);
+		}
 
 		cargarCombosBuscarPrincipales();
 		prepararVentana();
@@ -353,6 +363,7 @@ public class Movimientos extends JFrame implements ActionListener {
 
 	private ArrayList<Producto> listaProductos = new ArrayList<Producto>();
 	private ArrayList<Categoria> listaCategorias = new ArrayList<Categoria>();
+	private JLabel lblNewLabel_3;
 	
 	private void prepararVentana() {
 
@@ -925,5 +936,38 @@ public class Movimientos extends JFrame implements ActionListener {
 		Menu ventanaMenu = new Menu();
 	    ventanaMenu.setVisible(true);
 	    this.dispose();
+	}
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == lblNewLabel_3) {
+			do_lblNewLabel_3_mouseClicked(e);
+		}
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	
+	protected void do_lblNewLabel_3_mouseClicked(MouseEvent e) {
+		JOptionPane.showMessageDialog(
+			    this,
+			    "Esta ventana es solo de consulta y esta diseñada para facilitar la"
+			    + "\nvisualizacion de las compras o ventas por los filtros que se elijan."
+			    + "\n"
+			    + "\nLas secciones tanto de compras como ventas funcionan independientemente"
+			    + "\nde la otra."
+			    + "\n"
+			    + "\nEn esta ventana se realiza la operacion automaticamente al presionar el"
+			    + "\nboton y tomara su dato de su campo de texto o desplegable relacionado."
+			    + "\n"
+			    + "\nAparte de esto cada tabla calculara el total de cada elemento que lo"
+			    + "\ncontenga devolviendo el total gastado o adquirido por producto o fecha"
+			    + "\npor ejemplo.",
+			    "Informacion.",
+			    JOptionPane.INFORMATION_MESSAGE
+			);
 	}
 }

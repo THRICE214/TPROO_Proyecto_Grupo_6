@@ -14,6 +14,8 @@ import javax.swing.JButton;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
@@ -22,8 +24,10 @@ import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class Inventario extends JFrame implements ActionListener {
+public class Inventario extends JFrame implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -48,6 +52,7 @@ public class Inventario extends JFrame implements ActionListener {
 	        new ArrayList<>();
 	private DefaultTableModel modeloTable;
 	private JButton btnListarTodo;
+	private JLabel lblNewLabel_3;
 
 	/**
 	 * Launch the application.
@@ -198,6 +203,14 @@ public class Inventario extends JFrame implements ActionListener {
 			btnListarTodo.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnListarTodo.setBounds(240, 466, 89, 23);
 			contentPane.add(btnListarTodo);
+		}
+		{
+			lblNewLabel_3 = new JLabel("i");
+			lblNewLabel_3.addMouseListener(this);
+			lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_3.setFont(new Font("Times New Roman", Font.BOLD, 16));
+			lblNewLabel_3.setBounds(0, 0, 23, 20);
+			contentPane.add(lblNewLabel_3);
 		}
 
 		cargarInventario();
@@ -437,5 +450,36 @@ public class Inventario extends JFrame implements ActionListener {
 	            agregarFila(d);
 	        }
 	    }
+	}
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == lblNewLabel_3) {
+			do_lblNewLabel_3_mouseClicked(e);
+		}
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	
+	protected void do_lblNewLabel_3_mouseClicked(MouseEvent e) {
+		JOptionPane.showMessageDialog(
+			    this,
+			    "Esta ventana es solo de consulta, esta permite revisar por diversos filtros de"
+			    + "\nbusqueda los lotes con sus productos y otros entes relacionados como el usuario"
+			    + "\nque los registro o en que compra se adquirieron."
+			    + "\n"
+			    + "\nAl ser esta una ventana de consulta no se pueden modificar ni eliminar los"
+			    + "lotes ni su informacion disponible."
+			    + "\n"
+			    + "\nA excepcion de producto o categoria debera llenar el campo de texto superior y"
+			    + "\ndsps usar el boton correspondiente al dato ingresado, cada boton necesitara su"
+			    + "\ntipo de dato, evite usar botones que no requieran la informacion a consultar.",
+			    "Informacion.",
+			    JOptionPane.INFORMATION_MESSAGE
+			);
 	}
 }

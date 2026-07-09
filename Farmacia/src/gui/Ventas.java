@@ -39,8 +39,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class Ventas extends JFrame implements ActionListener {
+public class Ventas extends JFrame implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -592,6 +594,14 @@ public class Ventas extends JFrame implements ActionListener {
 			    	btnRegresar.setBounds(1115, 699, 89, 23);
 			    	contentPane.add(btnRegresar);
 			    }
+			    {
+			    	lblNewLabel_5 = new JLabel("i");
+			    	lblNewLabel_5.addMouseListener(this);
+			    	lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
+			    	lblNewLabel_5.setFont(new Font("Times New Roman", Font.BOLD, 16));
+			    	lblNewLabel_5.setBounds(0, 0, 23, 20);
+			    	contentPane.add(lblNewLabel_5);
+			    }
 			} catch (java.text.ParseException e) {
 			    e.printStackTrace();
 			}
@@ -649,6 +659,7 @@ public class Ventas extends JFrame implements ActionListener {
 	private boolean actualizandoCategoria = false;
 	// NUEVA VARIABLE PARA EVITAR EVENTOS NO DESEADOS
 	private boolean limpiandoCampos = false;
+	private JLabel lblNewLabel_5;
 	
 	private void calcularSubtotal() {
 
@@ -1469,5 +1480,72 @@ public class Ventas extends JFrame implements ActionListener {
 			limpiandoCampos = false;
 			ex.printStackTrace();
 		}
+	}
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == lblNewLabel_5) {
+			do_lblNewLabel_5_mouseClicked(e);
+		}
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	
+	protected void do_lblNewLabel_5_mouseClicked(MouseEvent e) {
+		JOptionPane.showMessageDialog(
+			    this,
+			    "Esta seccion permite al usuario poder armar y registrar una venta dirigida al cliente"
+			    + "\nde producto/s, esta mostrara automaticamente los datos ya registrados en el sistema"
+			    + "\nexcepto por datos manuales como cantidad, nombre de producto y/o categoria.."
+			    + "\npreviamente a esto, el producto debera estar registrado asi como los lotes."
+			    + "\n"
+			    + "\nEsta ventana tiene 2 usos: "
+			    + "\n" 
+			    + "\n-Mientras no se este efectuando una venta (boton nueva venta) el usuario puede "
+			    + "\nrevisar las ventas en la tabla y clickeandolos puede pasar sus datos a los"
+			    + "\ncampos, agregando algunos detalles extra de esa venta."
+			    + "\n"
+			    + "\n-Tambien se pueden buscar las ventas realizadas por fecha desde el boton 'Buscar'"
+			    + "\nseleccionando previamente en el desplegable el campo a filtrar y en el cuadro de"
+			    + "\ntexto el valor especifico del campo a filtrar."
+			    + "\n\n"
+			    + "\n-Por otro lado al presionar el boton 'Nueva Venta' el programa limpiara la tabla"
+			    + "\ny la utilizara para mostrar los datos de la nueva venta que se realizara, rellenando"
+			    + "\nautomaticamente varios campos que no necesitan ser ingresados por el usuario, como el"
+			    + "\nnombre de usuario, la fecha, entre otros."
+			    + "\n"
+			    + "\n-En este estado tambien se habilitara el ingreso de los campos necesarios para agregar"
+			    + "\nun elemento a la compra, asi como los productos registrados se rellenaran en el"
+			    + "\ndesplegable 'Nombre de Productos', tras esto puede agregar este elemento a la venta"
+			    + "\npresionando sobre el boton 'Agregar a la Venta'"
+			    + "\n"
+			    + "\nAl seleccionar un producto se mostrara su lote con la fecha de vencimiento mas proxima,"
+			    + "\nsin embargo es posible vender mas productos si este cuenta con mas lotes disponibles,"
+			    + "\nal agregarlo confirmando esta adquisicion aparecera en la tabla por separado el"
+			    + "\nproducto con su cantidad adquirida de cada lote diferente y este proceso es automatico"
+			    + "\nmientras la cantidad total de stock lo permita."
+			    + "\n"
+			    + "\n-Solo se puede adquirir una vez una cantidad de prodcutos por operacion, en caso de"
+			    + "\nquerer agregar mas unidades del producto, tiene que eliminar lo agregado"
+			    + "\ny volver a agregarlo con la cantidad correcta (revisar seccion debajo para eliminar)."
+			    + "\n"
+			    + "\n-En caso de querer eliminar un elemento de la venta primero seleccione el elemento"
+			    + "\nclickeando sobre este en la tabla, posteriormente presione el boton 'Eliminar Elemento'"
+			    + "\ny confirme la accion para poder retirarlo de la lista."
+			    + "\n"
+			    + "\n-Para confirmar y efectuar la venta completa presione el boton 'Terminar Venta', tras"
+			    + "\nesto la venta sera registrada en la base de datos asi como los lotes usados seran "
+			    + "\ndescontados, los cuales podran ser de la misma forma consultados en "
+			    + "\nla ventana 'Inventario' disponibe desde el 'Menu'."
+			    + "\n"
+			    + "\n-En cualquier momento de la venta puede cancelar la operacion por cualquier motivo"
+			    + "\npresionando el boton 'Cancelar Venta', tras esto retornara a la vista general.",
+			    "Informacion.",
+			    JOptionPane.INFORMATION_MESSAGE
+			);
 	}
 }

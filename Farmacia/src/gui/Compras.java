@@ -25,8 +25,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class Compras extends JFrame implements ActionListener {
+public class Compras extends JFrame implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -535,6 +537,14 @@ public class Compras extends JFrame implements ActionListener {
 			lblNewLabel_19.setBounds(262, 567, 86, 14);
 			contentPane.add(lblNewLabel_19);
 		}
+		{
+			lblNewLabel_20 = new JLabel("i");
+			lblNewLabel_20.addMouseListener(this);
+			lblNewLabel_20.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_20.setFont(new Font("Times New Roman", Font.BOLD, 16));
+			lblNewLabel_20.setBounds(0, 0, 23, 20);
+			contentPane.add(lblNewLabel_20);
+		}
 		
 		//funciones al inicializar
 		configurarEventosCalculo();
@@ -547,6 +557,7 @@ public class Compras extends JFrame implements ActionListener {
 	private clase.Producto productoSeleccionadoTemporal = null;
 	private clase.Compra compraActual;
 	private boolean estadoComprando = false;
+	private JLabel lblNewLabel_20;
 	
 	private void configurarAnchoColumnas() {
 	    tblCom.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -1324,5 +1335,65 @@ public class Compras extends JFrame implements ActionListener {
 			          + "Use: AAAA-MM-DD");
 			}
 		}
+	}
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == lblNewLabel_20) {
+			do_lblNewLabel_20_mouseClicked(e);
+		}
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	
+	protected void do_lblNewLabel_20_mouseClicked(MouseEvent e) {
+		JOptionPane.showMessageDialog(
+			    this,
+			    "Esta seccion permite al usuario poder armar y registrar una compra o adquisicion"
+			    + "\nde producto/s esto registrara automaticamente el lote excepto por datos necesarios"
+			    + "\ncomo fecha de vencimiento, cantidad, precio, etc.. previamente a esto, el producto"
+			    + "\ndebera estar registrado."
+			    + "\n"
+			    + "\nEsta ventana tiene 2 usos: "
+			    + "\n" 
+			    + "\n-Mientras no se este efectuando una compra (boton nueva compra) el usuario puede "
+			    + "\nrevisar las compras en la tabla y clickeandolos puede pasar sus datos a los"
+			    + "\ncampos, agregando algunos detalles extra de esa compra."
+			    + "\n"
+			    + "\n-Tambien se pueden buscar las compras realizadas por fecha desde el boton 'Buscar'"
+			    + "\nseleccionando previamente en el desplegable el campo a filtrar y en el cuadro de"
+			    + "\ntexto el valor especifico del campo a filtrar."
+			    + "\n\n"
+			    + "\n-Por otro lado al presionar el boton 'Nueva compra' el programa limpiara la tabla"
+			    + "\ny la utilizara para mostrar los datos de la nueva compra que se realizara, rellenando"
+			    + "\nautomaticamente varios campos que no necesitan ser ingresados por el usuario, como el"
+			    + "\nnombre de usuario, la fecha, entre otros."
+			    + "\n"
+			    + "\n-En este estado tambien se habilitara el ingreso de los campos necesarios para agregar"
+			    + "\nun elemento a la compra, asi como los productos registrados se rellenaran en el"
+			    + "\ndesplegable 'Nombre de Productos', tras esto puede agregar este elemento a la compra"
+			    + "\npresionando sobre el boton 'Agregar a la Compra'"
+			    + "\n"
+			    + "\n-Solo se puede adquirir una vez una cantidad de prodcutos por operacion, en caso de"
+			    + "\nquerer agregar mas unidades del producto a este lote, tiene que eliminar lo agregado"
+			    + "\ny volver a agregarlo con la cantidad correcta (revisar seccion debajo para eliminar)."
+			    + "\n"
+			    + "\n-En caso de querer eliminar un elemento de la compra primero seleccione el elemento"
+			    + "\nclickeando sobre este en la tabla, posteriormente presione el boton 'Eliminar Elemento'"
+			    + "\ny confirme la accion para poder retirarlo de la lista."
+			    + "\n"
+			    + "\n-Para confirmar y efectuar la compra completa presione el boton 'Terminar Compra', tras"
+			    + "\nesto la compra sera registrada en la base de datos asi como los lotes, los cuales"
+			    + "\npodran ser de la misma forma consultados en la ventana 'Inventario' disponibe desde el 'Menu'."
+			    + "\n"
+			    + "\n-En cualquier momento de la compra puede cancelar la operacion por cualquier motivo"
+			    + "\npresionando el boton 'Cancelar Compra', tras esto retornara a la vista general.",
+			    "Informacion.",
+			    JOptionPane.INFORMATION_MESSAGE
+			);
 	}
 }

@@ -32,8 +32,10 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import java.awt.event.MouseListener;
 
-public class Productos extends JFrame implements ActionListener {
+public class Productos extends JFrame implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -469,6 +471,14 @@ public class Productos extends JFrame implements ActionListener {
 			txtPresP.setBounds(114, 215, 199, 83);
 			contentPane.add(txtPresP);
 		}
+		{
+			lblNewLabel_17 = new JLabel("i");
+			lblNewLabel_17.addMouseListener(this);
+			lblNewLabel_17.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_17.setFont(new Font("Times New Roman", Font.BOLD, 16));
+			lblNewLabel_17.setBounds(1221, 0, 23, 20);
+			contentPane.add(lblNewLabel_17);
+		}
 		
 		//funcion cargar tablas categoria al iniciar el frame
 		cargarCategoriaTabla();
@@ -522,6 +532,7 @@ public class Productos extends JFrame implements ActionListener {
 		private JButton btnListarC;
 		private JButton btnListarP;
 		private JTextArea txtPresP;
+		private JLabel lblNewLabel_17;
 	
 	public void limpiarCampos() {
 		//campos producto
@@ -1152,5 +1163,37 @@ public class Productos extends JFrame implements ActionListener {
 	    ventanaMenu.setVisible(true);
 	    
 	    this.dispose();
+	}
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == lblNewLabel_17) {
+			do_lblNewLabel_17_mouseClicked(e);
+		}
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	
+	protected void do_lblNewLabel_17_mouseClicked(MouseEvent e) {
+		JOptionPane.showMessageDialog(
+			    this,
+			    "Esta ventana permite al usuario registrar categorias y productos para poder utilizarlos"
+			    + "\nen el registro de compras como en el de ventas, aunque este ultimo necesitara lotes."
+			    + "\n"
+			    + "\nLa seccion de producto y categoria estan separadas y funcionan independientemente con"
+			    + "\nsus tablas, campos y botones por lo que pueden ser operados independientemente si se"
+			    + "\nrequiere."
+			    + "\n"
+			    + "\nSi se requiere registrar un producto pero su categoria no esta disponible, es porque"
+			    + "\nla categoria necesita estar registrada previamente, asi que debera registrar la"
+			    + "\ncategoria desde su seccion en la ventana, una vez realizado podra seleccionarla"
+			    + "\n para registrar su producto con esta categoria nueva.",
+			    "Informacion.",
+			    JOptionPane.INFORMATION_MESSAGE
+			);
 	}
 }
