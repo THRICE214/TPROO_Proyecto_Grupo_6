@@ -947,6 +947,12 @@ CALL SP_INSERTAR_CATEGORIA('Antihistaminicos', 'Medicamentos para controlar y al
 CALL SP_INSERTAR_CATEGORIA('Antihipertensivos', 'Medicamentos utilizados para controlar y disminuir los niveles altos de presión arterial.');
 CALL SP_INSERTAR_CATEGORIA('Antidiabeticos', 'Medicamentos destinados a controlar y regular los niveles de glucosa (azúcar) en la sangre.');
 
+-- categorias adicionales
+CALL SP_INSERTAR_CATEGORIA('Gastrointestinales', 'Medicamentos destinados al alivio de acidez, gases, malestar estomacal y otros trastornos digestivos.');
+CALL SP_INSERTAR_CATEGORIA('Broncodilatadores y Expectorantes', 'Medicamentos utilizados para aliviar problemas respiratorios, tos, flema o dificultad para respirar.');
+CALL SP_INSERTAR_CATEGORIA('Vitaminas y Suplementos', 'Productos destinados al aporte de vitaminas, minerales y nutrientes complementarios para el organismo.');
+CALL SP_INSERTAR_CATEGORIA('Antimicoticos', 'Medicamentos utilizados para tratar infecciones causadas por hongos en la piel, mucosas u otras zonas.');
+
 -- productos
 -- Medicamentos Originales
 CALL SP_INSERTAR_PRODUCTO('Actron 600', 'Ibuprofeno', 'Bayer', 'Bayer S.A.', 'Caja de 20 cápsulas blandas', 14.50, false, true, 10000);
@@ -962,5 +968,38 @@ CALL SP_INSERTAR_PRODUCTO('Azitromicina Genfar', 'Azitromicina', 'Genfar', 'Labo
 CALL SP_INSERTAR_PRODUCTO('Enalapril Infamed', 'Enalapril', 'Infamed', 'Corporación Infamed', 'Caja de 30 tabletas de 20mg', 5.50, true, true, 10004);
 CALL SP_INSERTAR_PRODUCTO('Metformina IQB', 'Metformina', 'IQB', 'Laboratorios IQB', 'Caja con 30 tabletas de 850mg', 11.20, true, true, 10005);
 
+-- productos adicionales
+
+-- Analgesicos
+CALL SP_INSERTAR_PRODUCTO('Paracetamol 500mg', 'Paracetamol', 'Generico', 'Portugal', 'Caja de 100 tabletas de 500mg', 10.00, false, true, 10000);
+CALL SP_INSERTAR_PRODUCTO('Ibuprofeno 400mg', 'Ibuprofeno', 'Generico', 'Portugal', 'Caja de 100 tabletas recubiertas de 400mg', 10.00, true, true, 10000);
+
+-- Antibioticos
+CALL SP_INSERTAR_PRODUCTO('Amoxicilina + Acido Clavulanico 500mg/125mg', 'Amoxicilina + Acido Clavulanico', 'Generico', 'Portugal', 'Caja de 10 tabletas recubiertas', 14.20, true, true, 10001);
+CALL SP_INSERTAR_PRODUCTO('Ciprofloxacino 500mg', 'Ciprofloxacino', 'Generico', 'Portugal', 'Caja de 100 tabletas recubiertas de 500mg', 2.50, true, true, 10001);
+
+-- Antihistaminicos
+CALL SP_INSERTAR_PRODUCTO('Loratadina 10mg', 'Loratadina', 'Generico', 'Portugal', 'Caja de 100 tabletas de 10mg', 6.00, true, true, 10003);
+CALL SP_INSERTAR_PRODUCTO('Cetirizina 10mg', 'Cetirizina', 'Generico', 'IQ Farma', 'Caja de 100 tabletas recubiertas de 10mg', 10.00, true, true, 10003);
+
+-- Antihipertensivos
+CALL SP_INSERTAR_PRODUCTO('Losartan 50mg Genfar', 'Losartan Potasico', 'Genfar', 'Laboratorios Genfar', 'Caja de 30 comprimidos recubiertos de 50mg', 9.70, true, true, 10004);
+CALL SP_INSERTAR_PRODUCTO('Amlodipino 5mg', 'Amlodipino', 'Generico', 'Portugal', 'Caja de tabletas de 5mg', 7.30, true, true, 10004);
+
+-- Gastrointestinales
+CALL SP_INSERTAR_PRODUCTO('Omeprazol 20mg', 'Omeprazol', 'Generico', 'Portugal', 'Caja de 100 capsulas de liberacion retardada de 20mg', 12.00, true, true, 10006);
+CALL SP_INSERTAR_PRODUCTO('Simeticona 80mg/ml Suspension Oral', 'Simeticona', 'Generico', 'Portugal', 'Frasco de suspension oral 80mg/ml', 2.80, false, true, 10006);
+
+-- Broncodilatadores y Expectorantes
+CALL SP_INSERTAR_PRODUCTO('Salbutamol PHG 100mcg Inhalador', 'Salbutamol', 'PHG', 'PHG', 'Frasco inhalador de 200 dosis de 100mcg', 7.20, true, true, 10007);
+
+-- Vitaminas y Suplementos
+CALL SP_INSERTAR_PRODUCTO('Vitamina C + Zinc Efervescente', 'Acido Ascorbico + Zinc', 'Vitamins For Life', 'Vitamins For Life', 'Tubo de tabletas efervescentes sabor naranja', 14.90, false, true, 10008);
+
+-- Antimicoticos
+CALL SP_INSERTAR_PRODUCTO('Clotrimazol 1% Crema', 'Clotrimazol', 'Generico', 'Farmindustria', 'Tubo de crema topica al 1%', 8.70, false, true, 10009);
+
 -- #Zona libre para usar scripts o calls de la DB ---------------------------------------------------------------------
 CALL SP_MOVIMIENTOS_VENTAS();
+
+select * from producto;

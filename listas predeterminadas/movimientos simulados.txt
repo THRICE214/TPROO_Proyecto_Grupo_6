@@ -1,0 +1,460 @@
+-- #Datos simulados: compras, lotes, ventas y detalles ------------------------------------------------------------------
+-- Semana simulada anterior al 2026-07-09: del 2026-07-02 al 2026-07-08
+
+START TRANSACTION;
+
+-- Usuario administrador / usuario base
+SELECT id INTO @id_usuario
+FROM usuario
+ORDER BY id ASC
+LIMIT 1;
+
+-- IDs de productos por nombre, para no depender tanto del autoincrement exacto
+SELECT id INTO @id_actron FROM producto WHERE nombre = 'Actron 600' LIMIT 1;
+SELECT id INTO @id_amoxicilina FROM producto WHERE nombre = 'Amoxicilina MK' LIMIT 1;
+SELECT id INTO @id_panadol FROM producto WHERE nombre = 'Panadol Antigripal' LIMIT 1;
+SELECT id INTO @id_apronax FROM producto WHERE nombre = 'Apronax 550' LIMIT 1;
+SELECT id INTO @id_degraler FROM producto WHERE nombre = 'Degraler' LIMIT 1;
+SELECT id INTO @id_azitromicina FROM producto WHERE nombre = 'Azitromicina Genfar' LIMIT 1;
+SELECT id INTO @id_enalapril FROM producto WHERE nombre = 'Enalapril Infamed' LIMIT 1;
+SELECT id INTO @id_metformina FROM producto WHERE nombre = 'Metformina IQB' LIMIT 1;
+
+
+-- =====================================================================================================================
+-- 10 COMPRAS SIMULADAS
+-- =====================================================================================================================
+
+-- COMPRA 1 - 2026-07-02 ------------------------------------------------------------------------------------------------
+INSERT INTO compra (fecha, estado, id_usuario)
+VALUES ('2026-07-02', TRUE, @id_usuario);
+
+SET @compra1 = LAST_INSERT_ID();
+
+INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto)
+VALUES ('SIM-ACTR-001', '2027-08-15', 8, @id_actron);
+
+SET @lote_actron_1 = LAST_INSERT_ID();
+
+INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote)
+VALUES (8, 12.00, @compra1, @id_actron, @lote_actron_1);
+
+CALL SP_ACTUALIZAR_PRECIO_PRODUCTO_20(@id_actron);
+
+
+-- COMPRA 2 - 2026-07-02 ------------------------------------------------------------------------------------------------
+INSERT INTO compra (fecha, estado, id_usuario)
+VALUES ('2026-07-02', TRUE, @id_usuario);
+
+SET @compra2 = LAST_INSERT_ID();
+
+INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto)
+VALUES ('SIM-PANA-001', '2027-09-20', 12, @id_panadol);
+
+SET @lote_panadol_1 = LAST_INSERT_ID();
+
+INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote)
+VALUES (12, 15.00, @compra2, @id_panadol, @lote_panadol_1);
+
+CALL SP_ACTUALIZAR_PRECIO_PRODUCTO_20(@id_panadol);
+
+
+-- COMPRA 3 - 2026-07-03 ------------------------------------------------------------------------------------------------
+INSERT INTO compra (fecha, estado, id_usuario)
+VALUES ('2026-07-03', TRUE, @id_usuario);
+
+SET @compra3 = LAST_INSERT_ID();
+
+INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto)
+VALUES ('SIM-AMOX-001', '2027-06-10', 10, @id_amoxicilina);
+
+SET @lote_amoxicilina_1 = LAST_INSERT_ID();
+
+INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote)
+VALUES (10, 10.50, @compra3, @id_amoxicilina, @lote_amoxicilina_1);
+
+CALL SP_ACTUALIZAR_PRECIO_PRODUCTO_20(@id_amoxicilina);
+
+
+-- COMPRA 4 - 2026-07-03 ------------------------------------------------------------------------------------------------
+INSERT INTO compra (fecha, estado, id_usuario)
+VALUES ('2026-07-03', TRUE, @id_usuario);
+
+SET @compra4 = LAST_INSERT_ID();
+
+INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto)
+VALUES ('SIM-APRO-001', '2027-11-05', 7, @id_apronax);
+
+SET @lote_apronax_1 = LAST_INSERT_ID();
+
+INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote)
+VALUES (7, 12.50, @compra4, @id_apronax, @lote_apronax_1);
+
+CALL SP_ACTUALIZAR_PRECIO_PRODUCTO_20(@id_apronax);
+
+
+-- COMPRA 5 - 2026-07-04 ------------------------------------------------------------------------------------------------
+INSERT INTO compra (fecha, estado, id_usuario)
+VALUES ('2026-07-04', TRUE, @id_usuario);
+
+SET @compra5 = LAST_INSERT_ID();
+
+INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto)
+VALUES ('SIM-DEGR-001', '2027-10-30', 6, @id_degraler);
+
+SET @lote_degraler_1 = LAST_INSERT_ID();
+
+INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote)
+VALUES (6, 37.50, @compra5, @id_degraler, @lote_degraler_1);
+
+CALL SP_ACTUALIZAR_PRECIO_PRODUCTO_20(@id_degraler);
+
+
+-- COMPRA 6 - 2026-07-04 ------------------------------------------------------------------------------------------------
+INSERT INTO compra (fecha, estado, id_usuario)
+VALUES ('2026-07-04', TRUE, @id_usuario);
+
+SET @compra6 = LAST_INSERT_ID();
+
+INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto)
+VALUES ('SIM-AZIT-001', '2027-07-25', 9, @id_azitromicina);
+
+SET @lote_azitromicina_1 = LAST_INSERT_ID();
+
+INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote)
+VALUES (9, 7.40, @compra6, @id_azitromicina, @lote_azitromicina_1);
+
+CALL SP_ACTUALIZAR_PRECIO_PRODUCTO_20(@id_azitromicina);
+
+
+-- COMPRA 7 - 2026-07-05 ------------------------------------------------------------------------------------------------
+INSERT INTO compra (fecha, estado, id_usuario)
+VALUES ('2026-07-05', TRUE, @id_usuario);
+
+SET @compra7 = LAST_INSERT_ID();
+
+INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto)
+VALUES ('SIM-ENAL-001', '2028-01-18', 15, @id_enalapril);
+
+SET @lote_enalapril_1 = LAST_INSERT_ID();
+
+INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote)
+VALUES (15, 4.60, @compra7, @id_enalapril, @lote_enalapril_1);
+
+CALL SP_ACTUALIZAR_PRECIO_PRODUCTO_20(@id_enalapril);
+
+
+-- COMPRA 8 - 2026-07-06 ------------------------------------------------------------------------------------------------
+INSERT INTO compra (fecha, estado, id_usuario)
+VALUES ('2026-07-06', TRUE, @id_usuario);
+
+SET @compra8 = LAST_INSERT_ID();
+
+INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto)
+VALUES ('SIM-METF-001', '2028-02-12', 14, @id_metformina);
+
+SET @lote_metformina_1 = LAST_INSERT_ID();
+
+INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote)
+VALUES (14, 9.30, @compra8, @id_metformina, @lote_metformina_1);
+
+CALL SP_ACTUALIZAR_PRECIO_PRODUCTO_20(@id_metformina);
+
+
+-- COMPRA 9 - 2026-07-07 ------------------------------------------------------------------------------------------------
+-- Segundo lote pequeño de Actron para simular venta multilote
+INSERT INTO compra (fecha, estado, id_usuario)
+VALUES ('2026-07-07', TRUE, @id_usuario);
+
+SET @compra9 = LAST_INSERT_ID();
+
+INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto)
+VALUES ('SIM-ACTR-002', '2028-03-10', 5, @id_actron);
+
+SET @lote_actron_2 = LAST_INSERT_ID();
+
+INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote)
+VALUES (5, 12.80, @compra9, @id_actron, @lote_actron_2);
+
+CALL SP_ACTUALIZAR_PRECIO_PRODUCTO_20(@id_actron);
+
+
+-- COMPRA 10 - 2026-07-08 -----------------------------------------------------------------------------------------------
+-- Segundo lote pequeño de Panadol para simular venta multilote
+INSERT INTO compra (fecha, estado, id_usuario)
+VALUES ('2026-07-08', TRUE, @id_usuario);
+
+SET @compra10 = LAST_INSERT_ID();
+
+INSERT INTO lote (numero_lote, fecha_vencimiento, stock_actual, id_producto)
+VALUES ('SIM-PANA-002', '2028-04-05', 6, @id_panadol);
+
+SET @lote_panadol_2 = LAST_INSERT_ID();
+
+INSERT INTO detalle_compra (cant, costo_uni, id_compra, id_producto, id_lote)
+VALUES (6, 15.80, @compra10, @id_panadol, @lote_panadol_2);
+
+CALL SP_ACTUALIZAR_PRECIO_PRODUCTO_20(@id_panadol);
+
+
+-- =====================================================================================================================
+-- VENTAS SIMULADAS
+-- Se hacen más ventas que compras.
+-- Algunas ventas tienen varios detalles.
+-- 3 ventas usan más de un lote para simular multilote.
+-- =====================================================================================================================
+
+-- VENTA 1 - 2026-07-02 -------------------------------------------------------------------------------------------------
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-02', @id_usuario);
+
+SET @venta1 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (2, (SELECT precio FROM producto WHERE id = @id_actron), @venta1, @id_actron, @lote_actron_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 2
+WHERE id = @lote_actron_1
+  AND stock_actual >= 2;
+
+
+-- VENTA 2 - 2026-07-03 -------------------------------------------------------------------------------------------------
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-03', @id_usuario);
+
+SET @venta2 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (3, (SELECT precio FROM producto WHERE id = @id_panadol), @venta2, @id_panadol, @lote_panadol_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 3
+WHERE id = @lote_panadol_1
+  AND stock_actual >= 3;
+
+
+-- VENTA 3 - 2026-07-03 -------------------------------------------------------------------------------------------------
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-03', @id_usuario);
+
+SET @venta3 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (2, (SELECT precio FROM producto WHERE id = @id_amoxicilina), @venta3, @id_amoxicilina, @lote_amoxicilina_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 2
+WHERE id = @lote_amoxicilina_1
+  AND stock_actual >= 2;
+
+
+-- VENTA 4 - 2026-07-04 -------------------------------------------------------------------------------------------------
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-04', @id_usuario);
+
+SET @venta4 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (1, (SELECT precio FROM producto WHERE id = @id_degraler), @venta4, @id_degraler, @lote_degraler_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 1
+WHERE id = @lote_degraler_1
+  AND stock_actual >= 1;
+
+
+-- VENTA 5 - 2026-07-04 -------------------------------------------------------------------------------------------------
+-- Venta con varios productos
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-04', @id_usuario);
+
+SET @venta5 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (2, (SELECT precio FROM producto WHERE id = @id_apronax), @venta5, @id_apronax, @lote_apronax_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 2
+WHERE id = @lote_apronax_1
+  AND stock_actual >= 2;
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (3, (SELECT precio FROM producto WHERE id = @id_azitromicina), @venta5, @id_azitromicina, @lote_azitromicina_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 3
+WHERE id = @lote_azitromicina_1
+  AND stock_actual >= 3;
+
+
+-- VENTA 6 - 2026-07-05 -------------------------------------------------------------------------------------------------
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-05', @id_usuario);
+
+SET @venta6 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (5, (SELECT precio FROM producto WHERE id = @id_enalapril), @venta6, @id_enalapril, @lote_enalapril_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 5
+WHERE id = @lote_enalapril_1
+  AND stock_actual >= 5;
+
+
+-- VENTA 7 - 2026-07-05 -------------------------------------------------------------------------------------------------
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-05', @id_usuario);
+
+SET @venta7 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (4, (SELECT precio FROM producto WHERE id = @id_metformina), @venta7, @id_metformina, @lote_metformina_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 4
+WHERE id = @lote_metformina_1
+  AND stock_actual >= 4;
+
+
+-- VENTA 8 - 2026-07-06 -------------------------------------------------------------------------------------------------
+-- MULTILOTE 1: Actron usando lote 1 y lote 2
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-06', @id_usuario);
+
+SET @venta8 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (4, (SELECT precio FROM producto WHERE id = @id_actron), @venta8, @id_actron, @lote_actron_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 4
+WHERE id = @lote_actron_1
+  AND stock_actual >= 4;
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (2, (SELECT precio FROM producto WHERE id = @id_actron), @venta8, @id_actron, @lote_actron_2);
+
+UPDATE lote
+SET stock_actual = stock_actual - 2
+WHERE id = @lote_actron_2
+  AND stock_actual >= 2;
+
+
+-- VENTA 9 - 2026-07-06 -------------------------------------------------------------------------------------------------
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-06', @id_usuario);
+
+SET @venta9 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (2, (SELECT precio FROM producto WHERE id = @id_panadol), @venta9, @id_panadol, @lote_panadol_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 2
+WHERE id = @lote_panadol_1
+  AND stock_actual >= 2;
+
+
+-- VENTA 10 - 2026-07-07 ------------------------------------------------------------------------------------------------
+-- MULTILOTE 2: Panadol usando lote 1 y lote 2
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-07', @id_usuario);
+
+SET @venta10 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (5, (SELECT precio FROM producto WHERE id = @id_panadol), @venta10, @id_panadol, @lote_panadol_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 5
+WHERE id = @lote_panadol_1
+  AND stock_actual >= 5;
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (3, (SELECT precio FROM producto WHERE id = @id_panadol), @venta10, @id_panadol, @lote_panadol_2);
+
+UPDATE lote
+SET stock_actual = stock_actual - 3
+WHERE id = @lote_panadol_2
+  AND stock_actual >= 3;
+
+
+-- VENTA 11 - 2026-07-07 ------------------------------------------------------------------------------------------------
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-07', @id_usuario);
+
+SET @venta11 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (4, (SELECT precio FROM producto WHERE id = @id_amoxicilina), @venta11, @id_amoxicilina, @lote_amoxicilina_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 4
+WHERE id = @lote_amoxicilina_1
+  AND stock_actual >= 4;
+
+
+-- VENTA 12 - 2026-07-08 ------------------------------------------------------------------------------------------------
+-- MULTILOTE 3: venta con varios lotes y productos
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-08', @id_usuario);
+
+SET @venta12 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (3, (SELECT precio FROM producto WHERE id = @id_actron), @venta12, @id_actron, @lote_actron_2);
+
+UPDATE lote
+SET stock_actual = stock_actual - 3
+WHERE id = @lote_actron_2
+  AND stock_actual >= 3;
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (2, (SELECT precio FROM producto WHERE id = @id_panadol), @venta12, @id_panadol, @lote_panadol_2);
+
+UPDATE lote
+SET stock_actual = stock_actual - 2
+WHERE id = @lote_panadol_2
+  AND stock_actual >= 2;
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (2, (SELECT precio FROM producto WHERE id = @id_apronax), @venta12, @id_apronax, @lote_apronax_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 2
+WHERE id = @lote_apronax_1
+  AND stock_actual >= 2;
+
+
+-- VENTA 13 - 2026-07-08 ------------------------------------------------------------------------------------------------
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-08', @id_usuario);
+
+SET @venta13 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (2, (SELECT precio FROM producto WHERE id = @id_degraler), @venta13, @id_degraler, @lote_degraler_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 2
+WHERE id = @lote_degraler_1
+  AND stock_actual >= 2;
+
+
+-- VENTA 14 - 2026-07-08 ------------------------------------------------------------------------------------------------
+INSERT INTO venta (fecha, id_usuario)
+VALUES ('2026-07-08', @id_usuario);
+
+SET @venta14 = LAST_INSERT_ID();
+
+INSERT INTO detalle_venta (cant, precio_unitario, id_venta, id_producto, id_lote)
+VALUES (3, (SELECT precio FROM producto WHERE id = @id_azitromicina), @venta14, @id_azitromicina, @lote_azitromicina_1);
+
+UPDATE lote
+SET stock_actual = stock_actual - 3
+WHERE id = @lote_azitromicina_1
+  AND stock_actual >= 3;
+
+
+COMMIT;
